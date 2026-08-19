@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Student CV Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0f172a;display:flex;min-height:100vh;color:#1e293b}
+
+/* ── FORM PANEL ── */
+.panel{width:380px;min-width:320px;background:#1e293b;height:100vh;overflow-y:auto;flex-shrink:0;padding:24px;position:sticky;top:0}
+.panel::-webkit-scrollbar{width:4px}.panel::-webkit-scrollbar-track{background:transparent}.panel::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+
+.panel-title{color:#f1f5f9;font-size:1.1rem;font-weight:600;margin-bottom:4px}
+.panel-sub{color:#64748b;font-size:0.75rem;margin-bottom:20px}
+
+.section-header{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#3b82f6;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid #334155}
+
+label{display:block;font-size:0.72rem;font-weight:500;color:#94a3b8;margin-bottom:3px;margin-top:10px}
+label:first-of-type{margin-top:0}
+input,textarea{width:100%;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:8px 10px;color:#f1f5f9;font-size:0.8rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s}
+input:focus,textarea:focus{border-color:#3b82f6}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+input::placeholder,textarea::placeholder{color:#475569}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row2 label{margin-top:0}
+
+/* Skill rows */
+.skill-row{display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:8px;align-items:end}
+.skill-row label{margin-top:0}
+select{width:100%;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:8px 10px;color:#f1f5f9;font-size:0.8rem;outline:none;cursor:pointer}
+select:focus{border-color:#3b82f6}
+
+/* Language rows */
+.lang-row{display:grid;grid-template-columns:1fr 100px;gap:8px;margin-bottom:8px;align-items:end}
+
+/* Add/remove buttons */
+.btn-add{background:transparent;border:1px dashed #334155;border-radius:6px;color:#64748b;font-size:0.75rem;padding:7px;width:100%;cursor:pointer;margin-top:6px;transition:all 0.2s}
+.btn-add:hover{border-color:#3b82f6;color:#3b82f6}
+.btn-remove{background:transparent;border:none;color:#475569;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;margin-left:4px;transition:color 0.2s}
+.btn-remove:hover{color:#ef4444}
+
+/* Photo upload */
+.photo-upload{border:2px dashed #334155;border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color 0.2s;margin-bottom:4px}
+.photo-upload:hover{border-color:#3b82f6}
+.photo-upload p{color:#64748b;font-size:0.75rem}
+.photo-upload span{color:#3b82f6;font-size:0.75rem;font-weight:500}
+#photoPreview{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:none;border:2px solid #3b82f6}
+
+/* Print button */
+.btn-print{width:100%;background:#3b82f6;border:none;border-radius:8px;color:#fff;font-size:0.82rem;font-weight:600;padding:10px;cursor:pointer;margin-top:20px;transition:background 0.2s}
+.btn-print:hover{background:#2563eb}
+
+/* ── PREVIEW PANEL ── */
+.preview-wrap{flex:1;padding:40px;overflow-y:auto;background:#e2e8f0}
+.cv{background:#fff;max-width:794px;margin:0 auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+
+/* CV HEADER */
+.cv-header{display:flex;gap:28px;align-items:flex-start;padding:40px 44px 32px;border-bottom:3px solid #2563eb}
+.cv-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #2563eb;flex-shrink:0;background:#eff6ff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cv-photo svg{width:40px;height:40px;fill:#bfdbfe}
+.cv-photo img{width:100%;height:100%;object-fit:cover}
+.cv-name{font-family:'Playfair Display',serif;font-size:2rem;color:#0f172a;line-height:1.1}
+.cv-title{font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2563eb;margin:4px 0 16px}
+.cv-contacts{display:flex;flex-wrap:wrap;gap:8px 18px}
+.cv-contact{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#475569;text-decoration:none}
+.cv-contact svg{width:12px;height:12px;stroke:#2563eb;stroke-width:2;fill:none;flex-shrink:0}
+.cv-contact:hover{color:#2563eb}
+
+/* CV BODY */
+.cv-body{display:grid;grid-template-columns:1fr 230px}
+.cv-main{padding:32px 40px;border-right:1px solid #e2e8f0}
+.cv-side{padding:32px 28px;background:#f8fafc}
+
+.cv-section{margin-bottom:28px}
+.cv-section:last-child{margin-bottom:0}
+.cv-section-title{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2563eb;margin-bottom:12px;padding-bottom:5px;border-bottom:1px solid #e2e8f0}
+.cv-about{font-size:0.82rem;color:#475569;line-height:1.75}
+
+/* Education */
+.edu{margin-bottom:14px}
+.edu:last-child{margin-bottom:0}
+.edu-degree{font-size:0.88rem;font-weight:600;color:#0f172a}
+.edu-school{font-size:0.8rem;color:#2563eb;font-weight:500}
+.edu-meta{font-size:0.72rem;color:#94a3b8;margin-top:1px}
+
+/* Skills */
+.skill{margin-bottom:10px}
+.skill-label-row{display:flex;justify-content:space-between;font-size:0.75rem;font-weight:500;color:#0f172a;margin-bottom:3px}
+.skill-pct{color:#94a3b8;font-weight:400}
+.skill-bar{height:4px;background:#e2e8f0;border-radius:10px}
+.skill-fill{height:100%;background:#2563eb;border-radius:10px;transition:width 0.4s}
+
+/* Languages */
+.lang{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:0.78rem}
+.lang-name{color:#0f172a;font-weight:500}
+.dots{display:flex;gap:3px}
+.dot{width:7px;height:7px;border-radius:50%;background:#e2e8f0}
+.dot.on{background:#2563eb}
+
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.cv-tag{font-size:0.68rem;background:#eff6ff;color:#2563eb;border-radius:3px;padding:2px 7px;font-weight:500}
+.cv-tag-outline{font-size:0.7rem;background:#fff;border:1px solid #e2e8f0;border-radius:99px;padding:2px 9px;color:#475569}
+
+/* Address */
+.cv-addr{font-size:0.78rem;color:#475569;line-height:1.8}
+
+/* empty placeholder */
+.placeholder{color:#cbd5e1;font-style:italic;font-size:0.8rem}
+
+@media print{
+  body{background:white}
+  .panel{display:none}
+  .preview-wrap{padding:0;background:white}
+  .cv{box-shadow:none;max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ FORM PANEL ════ -->
+<div class="panel">
+  <div class="panel-title">🎓 CV Builder</div>
+  <div class="panel-sub">Fill in your details — preview updates instantly</div>
+
+  <!-- PHOTO -->
+  <div class="section-header">Photo</div>
+  <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+    <img id="photoPreview" src="" alt="preview"/>
+    <p>Click to upload your photo</p>
+    <span>JPG, PNG supported</span>
+  </div>
+  <input type="file" id="photoInput" accept="image/*" style="display:none"/>
+
+  <!-- PERSONAL INFO -->
+  <div class="section-header">Personal Info</div>
+  <label>Full Name</label>
+  <input type="text" id="name" placeholder="e.g. Rahul Sharma" oninput="update()"/>
+  <label>Title / Field of Study</label>
+  <input type="text" id="title" placeholder="e.g. BCA Student · Computer Applications" oninput="update()"/>
+  <label>About Me</label>
+  <textarea id="about" placeholder="Write 2–3 lines about yourself, your interests, and your goals..." oninput="update()"></textarea>
+
+  <!-- CONTACT -->
+  <div class="section-header">Contact Details</div>
+  <label>Phone Number</label>
+  <input type="text" id="phone" placeholder="+91 98765 43210" oninput="update()"/>
+  <label>Email Address</label>
+  <input type="email" id="email" placeholder="you@email.com" oninput="update()"/>
+  <label>LinkedIn URL</label>
+  <input type="text" id="linkedin" placeholder="linkedin.com/in/yourname" oninput="update()"/>
+  <label>GitHub URL</label>
+  <input type="text" id="github" placeholder="github.com/yourusername" oninput="update()"/>
+  <label>Address</label>
+  <textarea id="address" placeholder="Street, Area, City – Pincode&#10;State, India" style="min-height:56px" oninput="update()"></textarea>
+
+  <!-- EDUCATION -->
+  <div class="section-header">Education</div>
+  <div id="eduList">
+    <div class="edu-entry" data-i="0">
+      <div class="row2">
+        <div><label>Degree / Class</label><input type="text" placeholder="BCA" oninput="update()"/></div>
+        <div><label>Score / %</label><input type="text" placeholder="CGPA 8.5" oninput="update()"/></div>
+      </div>
+      <label>School / College</label><input type="text" placeholder="College Name" oninput="update()"/>
+      <label>Year</label><input type="text" placeholder="2022 – 2025" oninput="update()"/>
+    </div>
+  </div>
+  <button class="btn-add" onclick="addEdu()">+ Add Education</button>
+
+  <!-- PROGRAMMING SKILLS -->
+  <div class="section-header">Programming Languages / Skills</div>
+  <div id="skillList">
+    <div class="skill-entry">
+      <div class="skill-row">
+        <div><label>Language / Skill</label><input type="text" placeholder="e.g. Python" oninput="update()"/></div>
+        <div><label>Level</label>
+          <select onchange="update()">
+            <option value="90">Expert</option>
+            <option value="75" selected>Advanced</option>
+            <option value="60">Intermediate</option>
+            <option value="40">Beginner</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-add" onclick="addSkill()">+ Add Skill</button>
+
+  <!-- TOOLS -->
+  <div class="section-header">Tools & Software</div>
+  <label>Add tools (comma separated)</label>
+  <input type="text" id="tools" placeholder="VS Code, Git, MySQL, Figma, MS Office" oninput="update()"/>
+
+  <!-- LANGUAGES KNOWN -->
+  <div class="section-header">Languages Known</div>
+  <div id="langList">
+    <div class="lang-entry">
+      <div class="lang-row">
+        <div><label>Language</label><input type="text" placeholder="e.g. Hindi" oninput="update()"/></div>
+        <div><label>Fluency</label>
+          <select onchange="update()">
+            <option value="5">Native</option>
+            <option value="4" selected>Fluent</option>
+            <option value="3">Good</option>
+            <option value="2">Basic</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-add" onclick="addLang()">+ Add Language</button>
+
+  <!-- INTERESTS -->
+  <div class="section-header">Interests</div>
+  <label>Add interests (comma separated)</label>
+  <input type="text" id="interests" placeholder="Cybersecurity, Gaming, Photography, Design" oninput="update()"/>
+
+  <button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+<!-- ════ PREVIEW ════ -->
+<div class="preview-wrap">
+  <div class="cv">
+
+    <!-- HEADER -->
+    <div class="cv-header">
+      <div class="cv-photo" id="cvPhoto">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div style="flex:1">
+        <div class="cv-name" id="cvName"><span class="placeholder">Your Name</span></div>
+        <div class="cv-title" id="cvTitle"><span class="placeholder">Your Title</span></div>
+        <div class="cv-contacts" id="cvContacts"></div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="cv-body">
+      <div class="cv-main">
+
+        <div class="cv-section">
+          <div class="cv-section-title">About Me</div>
+          <div class="cv-about" id="cvAbout"><span class="placeholder">Your description will appear here...</span></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Education</div>
+          <div id="cvEdu"></div>
+        </div>
+
+      </div>
+      <div class="cv-side">
+
+        <div class="cv-section">
+          <div class="cv-section-title">Address</div>
+          <div class="cv-addr" id="cvAddr"><span class="placeholder">Your address</span></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Programming Skills</div>
+          <div id="cvSkills"></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Tools & Software</div>
+          <div class="tags" id="cvTools"></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Languages Known</div>
+          <div id="cvLangs"></div>
+        </div>
+
+        <div class="cv-section">
+          <div class="cv-section-title">Interests</div>
+          <div class="tags" id="cvInterests"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PHOTO UPLOAD ──
+document.getElementById('photoInput').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    document.getElementById('photoPreview').src = ev.target.result;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.querySelector('.photo-upload p').style.display = 'none';
+    document.querySelector('.photo-upload span').textContent = 'Click to change photo';
+    document.getElementById('cvPhoto').innerHTML = `<img src="${ev.target.result}" alt="photo"/>`;
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── ADD EDUCATION ROW ──
+function addEdu(){
+  const list = document.getElementById('eduList');
+  const div = document.createElement('div');
+  div.className = 'edu-entry';
+  div.style.marginTop = '14px';
+  div.style.paddingTop = '14px';
+  div.style.borderTop = '1px solid #334155';
+  div.innerHTML = `
+    <div style="display:flex;justify-content:flex-end"><button class="btn-remove" onclick="this.closest('.edu-entry').remove();update()" title="Remove">✕</button></div>
+    <div class="row2">
+      <div><label>Degree / Class</label><input type="text" placeholder="10th / 12th / BCA" oninput="update()"/></div>
+      <div><label>Score / %</label><input type="text" placeholder="90%" oninput="update()"/></div>
+    </div>
+    <label>School / College</label><input type="text" placeholder="School or College Name" oninput="update()"/>
+    <label>Year</label><input type="text" placeholder="2020 – 2022" oninput="update()"/>
+  `;
+  list.appendChild(div);
+}
+
+// ── ADD SKILL ROW ──
+function addSkill(){
+  const list = document.getElementById('skillList');
+  const div = document.createElement('div');
+  div.className = 'skill-entry';
+  div.innerHTML = `
+    <div class="skill-row">
+      <div><label>Language / Skill</label><input type="text" placeholder="e.g. JavaScript" oninput="update()"/></div>
+      <div><label>Level</label>
+        <select onchange="update()">
+          <option value="90">Expert</option>
+          <option value="75">Advanced</option>
+          <option value="60" selected>Intermediate</option>
+          <option value="40">Beginner</option>
+        </select>
+      </div>
+    </div>
+    <div style="text-align:right;margin-top:-4px"><button class="btn-remove" onclick="this.closest('.skill-entry').remove();update()" title="Remove">✕ remove</button></div>
+  `;
+  list.appendChild(div);
+}
+
+// ── ADD LANGUAGE ROW ──
+function addLang(){
+  const list = document.getElementById('langList');
+  const div = document.createElement('div');
+  div.className = 'lang-entry';
+  div.innerHTML = `
+    <div class="lang-row">
+      <div><label>Language</label><input type="text" placeholder="e.g. Tamil" oninput="update()"/></div>
+      <div><label>Fluency</label>
+        <select onchange="update()">
+          <option value="5">Native</option>
+          <option value="4">Fluent</option>
+          <option value="3" selected>Good</option>
+          <option value="2">Basic</option>
+        </select>
+      </div>
+    </div>
+    <div style="text-align:right;margin-top:-4px"><button class="btn-remove" onclick="this.closest('.lang-entry').remove();update()" title="Remove">✕ remove</button></div>
+  `;
+  list.appendChild(div);
+}
+
+// ── MAIN UPDATE FUNCTION ──
+function update(){
+  const v = id => document.getElementById(id)?.value?.trim() || '';
+  const set = (id, html) => { document.getElementById(id).innerHTML = html; };
+
+  // Name & title
+  set('cvName', v('name') || '<span class="placeholder">Your Name</span>');
+  set('cvTitle', v('title') || '<span class="placeholder">Your Title / Field</span>');
+
+  // About
+  set('cvAbout', v('about') ? v('about').replace(/\n/g,'<br/>') : '<span class="placeholder">Your description will appear here...</span>');
+
+  // Contacts
+  let contacts = '';
+  const phone = v('phone'), email = v('email'), linkedin = v('linkedin'), github = v('github');
+  if(phone) contacts += contact(phoneSvg, phone, '#');
+  if(email) contacts += contact(emailSvg, email, 'mailto:'+email);
+  if(linkedin) contacts += contact(linkedinSvg, linkedin, 'https://'+linkedin.replace(/^https?:\/\//,''));
+  if(github) contacts += contact(githubSvg, github, 'https://'+github.replace(/^https?:\/\//,''));
+  set('cvContacts', contacts || '<span class="placeholder" style="font-size:0.78rem">Phone · Email · LinkedIn · GitHub</span>');
+
+  // Address
+  const addr = v('address');
+  set('cvAddr', addr ? addr.replace(/\n/g,'<br/>') : '<span class="placeholder">Your address</span>');
+
+  // Education
+  let eduHtml = '';
+  document.querySelectorAll('.edu-entry').forEach(entry => {
+    const inputs = entry.querySelectorAll('input');
+    const degree = inputs[0]?.value?.trim();
+    const score  = inputs[1]?.value?.trim();
+    const school = inputs[2]?.value?.trim();
+    const year   = inputs[3]?.value?.trim();
+    if(degree || school){
+      eduHtml += `<div class="edu" style="margin-bottom:14px">
+        <div class="edu-degree">${degree||'—'} ${score ? '<span style="font-weight:400;font-size:0.75rem;color:#64748b">· '+score+'</span>' : ''}</div>
+        ${school ? `<div class="edu-school">${school}</div>` : ''}
+        ${year   ? `<div class="edu-meta">${year}</div>` : ''}
+      </div>`;
+    }
+  });
+  set('cvEdu', eduHtml || '<span class="placeholder">Your education entries...</span>');
+
+  // Skills
+  let skillHtml = '';
+  document.querySelectorAll('.skill-entry').forEach(entry => {
+    const name = entry.querySelector('input')?.value?.trim();
+    const pct  = entry.querySelector('select')?.value || '60';
+    const labels = {'90':'Expert','75':'Advanced','60':'Intermediate','40':'Beginner'};
+    if(name){
+      skillHtml += `<div class="skill">
+        <div class="skill-label-row"><span>${name}</span><span class="skill-pct">${labels[pct]}</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }
+  });
+  set('cvSkills', skillHtml || '<span class="placeholder">Your skills...</span>');
+
+  // Tools
+  const toolsRaw = v('tools');
+  const toolsHtml = toolsRaw
+    ? toolsRaw.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="cv-tag">${t}</span>`).join('')
+    : '<span class="placeholder">Tools...</span>';
+  set('cvTools', toolsHtml);
+
+  // Languages
+  let langHtml = '';
+  document.querySelectorAll('.lang-entry').forEach(entry => {
+    const name = entry.querySelector('input')?.value?.trim();
+    const lvl  = parseInt(entry.querySelector('select')?.value || '3');
+    if(name){
+      let dots = '';
+      for(let i=1;i<=5;i++) dots += `<div class="dot ${i<=lvl?'on':''}"></div>`;
+      langHtml += `<div class="lang"><span class="lang-name">${name}</span><div class="dots">${dots}</div></div>`;
+    }
+  });
+  set('cvLangs', langHtml || '<span class="placeholder">Your languages...</span>');
+
+  // Interests
+  const intRaw = v('interests');
+  const intHtml = intRaw
+    ? intRaw.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="cv-tag-outline">${t}</span>`).join('')
+    : '<span class="placeholder">Interests...</span>';
+  set('cvInterests', intHtml);
+}
+
+function contact(svg, text, href){
+  return `<a class="cv-contact" href="${href}" target="_blank">${svg}${text}</a>`;
+}
+
+const phoneSvg = `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.41 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.5 7.11A16 16 0 0013.88 14l.82-.82a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>`;
+const emailSvg = `<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
+const linkedinSvg = `<svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`;
+const githubSvg = `<svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>`;
+
+update();
+</script>
+</body>
+</html>
