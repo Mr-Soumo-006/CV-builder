@@ -3,357 +3,792 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Student CV Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+<title>CV Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
+/* ─── RESET ─── */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0f172a;display:flex;min-height:100vh;color:#1e293b}
+html,body{height:100%}
 
-/* ── FORM PANEL ── */
-.panel{width:380px;min-width:320px;background:#1e293b;height:100vh;overflow-y:auto;flex-shrink:0;padding:24px;position:sticky;top:0}
-.panel::-webkit-scrollbar{width:4px}.panel::-webkit-scrollbar-track{background:transparent}.panel::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+/* ─── APP SHELL ─── */
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#0d1117;
+  display:flex;
+  height:100vh;
+  overflow:hidden;
+}
 
-.panel-title{color:#f1f5f9;font-size:1.1rem;font-weight:600;margin-bottom:4px}
-.panel-sub{color:#64748b;font-size:0.75rem;margin-bottom:20px}
+/* ─── FORM PANEL ─── */
+.form-panel{
+  width:340px;
+  min-width:300px;
+  background:#161b22;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  border-right:1px solid #21262d;
+  flex-shrink:0;
+}
+.form-header{
+  padding:20px 22px 16px;
+  border-bottom:1px solid #21262d;
+  flex-shrink:0;
+}
+.form-header h2{
+  color:#e6edf3;
+  font-size:0.95rem;
+  font-weight:600;
+  letter-spacing:0.01em;
+}
+.form-header p{color:#7d8590;font-size:0.72rem;margin-top:2px}
 
-.section-header{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#3b82f6;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid #334155}
+.form-scroll{
+  flex:1;
+  overflow-y:auto;
+  padding:16px 22px 24px;
+}
+.form-scroll::-webkit-scrollbar{width:3px}
+.form-scroll::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
 
-label{display:block;font-size:0.72rem;font-weight:500;color:#94a3b8;margin-bottom:3px;margin-top:10px}
+/* ─── FORM SECTIONS ─── */
+.fsec{margin-bottom:6px}
+.fsec-head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.65rem;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  padding:14px 0 8px;
+  border-bottom:1px solid #21262d;
+  margin-bottom:10px;
+}
+.fsec-head::before{
+  content:'';
+  width:3px;height:10px;
+  background:#c9a84c;
+  border-radius:2px;
+  flex-shrink:0;
+}
+
+label{
+  display:block;
+  font-size:0.68rem;
+  font-weight:500;
+  color:#7d8590;
+  margin-bottom:3px;
+  margin-top:9px;
+}
 label:first-of-type{margin-top:0}
-input,textarea{width:100%;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:8px 10px;color:#f1f5f9;font-size:0.8rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s}
-input:focus,textarea:focus{border-color:#3b82f6}
-textarea{resize:vertical;min-height:70px;line-height:1.5}
-input::placeholder,textarea::placeholder{color:#475569}
 
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.row2 label{margin-top:0}
+input[type=text],input[type=email],textarea,select{
+  width:100%;
+  background:#0d1117;
+  border:1px solid #30363d;
+  border-radius:5px;
+  padding:7px 10px;
+  color:#e6edf3;
+  font-size:0.78rem;
+  font-family:'DM Sans',sans-serif;
+  outline:none;
+  transition:border-color 0.15s;
+}
+input[type=text]:focus,input[type=email]:focus,textarea:focus,select:focus{
+  border-color:#c9a84c;
+  box-shadow:0 0 0 2px rgba(201,168,76,0.08);
+}
+input::placeholder,textarea::placeholder{color:#484f58}
+textarea{resize:vertical;min-height:64px;line-height:1.55}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237d8590'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
 
-/* Skill rows */
-.skill-row{display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:8px;align-items:end}
-.skill-row label{margin-top:0}
-select{width:100%;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:8px 10px;color:#f1f5f9;font-size:0.8rem;outline:none;cursor:pointer}
-select:focus{border-color:#3b82f6}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g2 label{margin-top:0}
 
-/* Language rows */
-.lang-row{display:grid;grid-template-columns:1fr 100px;gap:8px;margin-bottom:8px;align-items:end}
+/* Repeating rows */
+.rep-row{
+  background:#0d1117;
+  border:1px solid #21262d;
+  border-radius:6px;
+  padding:10px;
+  margin-bottom:8px;
+  position:relative;
+}
+.rep-row .remove-btn{
+  position:absolute;top:8px;right:8px;
+  background:none;border:none;
+  color:#484f58;font-size:0.75rem;
+  cursor:pointer;padding:2px 5px;
+  border-radius:3px;
+  transition:color 0.15s,background 0.15s;
+}
+.rep-row .remove-btn:hover{color:#f85149;background:rgba(248,81,73,0.08)}
 
-/* Add/remove buttons */
-.btn-add{background:transparent;border:1px dashed #334155;border-radius:6px;color:#64748b;font-size:0.75rem;padding:7px;width:100%;cursor:pointer;margin-top:6px;transition:all 0.2s}
-.btn-add:hover{border-color:#3b82f6;color:#3b82f6}
-.btn-remove{background:transparent;border:none;color:#475569;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;margin-left:4px;transition:color 0.2s}
-.btn-remove:hover{color:#ef4444}
+/* Skill level inline */
+.skill-g{display:grid;grid-template-columns:1fr 96px;gap:8px;align-items:end}
+.skill-g label,.lang-g label{margin-top:0}
+.lang-g{display:grid;grid-template-columns:1fr 96px;gap:8px;align-items:end}
+
+.add-btn{
+  width:100%;
+  border:1px dashed #30363d;
+  background:transparent;
+  color:#7d8590;
+  font-size:0.72rem;
+  font-family:'DM Sans',sans-serif;
+  padding:7px;
+  border-radius:5px;
+  cursor:pointer;
+  transition:all 0.15s;
+  margin-top:4px;
+}
+.add-btn:hover{border-color:#c9a84c;color:#c9a84c}
 
 /* Photo upload */
-.photo-upload{border:2px dashed #334155;border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color 0.2s;margin-bottom:4px}
-.photo-upload:hover{border-color:#3b82f6}
-.photo-upload p{color:#64748b;font-size:0.75rem}
-.photo-upload span{color:#3b82f6;font-size:0.75rem;font-weight:500}
-#photoPreview{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:none;border:2px solid #3b82f6}
+.photo-drop{
+  border:1px dashed #30363d;
+  border-radius:6px;
+  padding:14px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color 0.15s;
+  background:#0d1117;
+}
+.photo-drop:hover{border-color:#c9a84c}
+.photo-drop p{color:#7d8590;font-size:0.72rem}
+.photo-drop b{color:#c9a84c;font-size:0.72rem;font-weight:500}
+#photoThumb{
+  width:56px;height:56px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:0 auto 8px;
+  display:none;
+  border:2px solid #c9a84c;
+}
 
-/* Print button */
-.btn-print{width:100%;background:#3b82f6;border:none;border-radius:8px;color:#fff;font-size:0.82rem;font-weight:600;padding:10px;cursor:pointer;margin-top:20px;transition:background 0.2s}
-.btn-print:hover{background:#2563eb}
+/* Footer */
+.form-footer{
+  padding:12px 22px;
+  border-top:1px solid #21262d;
+  flex-shrink:0;
+}
+.print-btn{
+  width:100%;
+  background:linear-gradient(135deg,#c9a84c,#e6c96b);
+  border:none;
+  border-radius:6px;
+  color:#0d1117;
+  font-size:0.8rem;
+  font-weight:700;
+  padding:10px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  letter-spacing:0.03em;
+  transition:opacity 0.15s;
+}
+.print-btn:hover{opacity:0.9}
 
-/* ── PREVIEW PANEL ── */
-.preview-wrap{flex:1;padding:40px;overflow-y:auto;background:#e2e8f0}
-.cv{background:#fff;max-width:794px;margin:0 auto;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+/* ─── PREVIEW AREA ─── */
+.preview-area{
+  flex:1;
+  overflow-y:auto;
+  background:#1c2128;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:32px 24px;
+}
+.preview-area::-webkit-scrollbar{width:4px}
+.preview-area::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 
-/* CV HEADER */
-.cv-header{display:flex;gap:28px;align-items:flex-start;padding:40px 44px 32px;border-bottom:3px solid #2563eb}
-.cv-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #2563eb;flex-shrink:0;background:#eff6ff;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cv-photo svg{width:40px;height:40px;fill:#bfdbfe}
-.cv-photo img{width:100%;height:100%;object-fit:cover}
-.cv-name{font-family:'Playfair Display',serif;font-size:2rem;color:#0f172a;line-height:1.1}
-.cv-title{font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2563eb;margin:4px 0 16px}
-.cv-contacts{display:flex;flex-wrap:wrap;gap:8px 18px}
-.cv-contact{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#475569;text-decoration:none}
-.cv-contact svg{width:12px;height:12px;stroke:#2563eb;stroke-width:2;fill:none;flex-shrink:0}
-.cv-contact:hover{color:#2563eb}
+/* ─────────────────────────────────────────────
+   THE CV ITSELF
+───────────────────────────────────────────── */
+#cv{
+  width:794px;
+  min-height:1123px;  /* A4 */
+  background:#fff;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  display:flex;
+  flex-direction:column;
+  font-family:'DM Sans',sans-serif;
+  position:relative;
+  overflow:hidden;
+}
 
-/* CV BODY */
-.cv-body{display:grid;grid-template-columns:1fr 230px}
-.cv-main{padding:32px 40px;border-right:1px solid #e2e8f0}
-.cv-side{padding:32px 28px;background:#f8fafc}
+/* ── CV TOP BAND ── */
+.cv-top{
+  display:flex;
+  background:#f8f5ef;
+  min-height:200px;
+  position:relative;
+}
 
-.cv-section{margin-bottom:28px}
-.cv-section:last-child{margin-bottom:0}
-.cv-section-title{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2563eb;margin-bottom:12px;padding-bottom:5px;border-bottom:1px solid #e2e8f0}
-.cv-about{font-size:0.82rem;color:#475569;line-height:1.75}
+/* Sidebar accent strip inside top */
+.cv-top-left{
+  width:260px;
+  flex-shrink:0;
+  background:#162032;
+  padding:36px 28px 32px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  position:relative;
+}
+/* gold top border on sidebar */
+.cv-top-left::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:4px;
+  background:linear-gradient(90deg,#c9a84c,#e6c96b,#c9a84c);
+}
 
-/* Education */
-.edu{margin-bottom:14px}
-.edu:last-child{margin-bottom:0}
-.edu-degree{font-size:0.88rem;font-weight:600;color:#0f172a}
-.edu-school{font-size:0.8rem;color:#2563eb;font-weight:500}
-.edu-meta{font-size:0.72rem;color:#94a3b8;margin-top:1px}
+.cv-photo-ring{
+  width:96px;height:96px;
+  border-radius:50%;
+  border:3px solid #c9a84c;
+  overflow:hidden;
+  background:#1e2d40;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  flex-shrink:0;
+}
+.cv-photo-ring img{width:100%;height:100%;object-fit:cover;display:block}
+.cv-photo-ring svg{width:38px;height:38px;fill:none;stroke:#4a6080;stroke-width:1.5}
 
-/* Skills */
-.skill{margin-bottom:10px}
-.skill-label-row{display:flex;justify-content:space-between;font-size:0.75rem;font-weight:500;color:#0f172a;margin-bottom:3px}
-.skill-pct{color:#94a3b8;font-weight:400}
-.skill-bar{height:4px;background:#e2e8f0;border-radius:10px}
-.skill-fill{height:100%;background:#2563eb;border-radius:10px;transition:width 0.4s}
+.cv-name-block{color:#fff}
+.cv-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.65rem;
+  font-weight:600;
+  line-height:1.1;
+  letter-spacing:0.01em;
+  color:#f0ead8;
+}
+.cv-field{
+  font-size:0.65rem;
+  font-weight:500;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  margin-top:5px;
+}
 
-/* Languages */
-.lang{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:0.78rem}
-.lang-name{color:#0f172a;font-weight:500}
-.dots{display:flex;gap:3px}
-.dot{width:7px;height:7px;border-radius:50%;background:#e2e8f0}
-.dot.on{background:#2563eb}
+/* ── CV TOP RIGHT (contact) ── */
+.cv-top-right{
+  flex:1;
+  padding:36px 36px 32px 32px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  background:#f8f5ef;
+}
 
-/* Tags */
-.tags{display:flex;flex-wrap:wrap;gap:5px}
-.cv-tag{font-size:0.68rem;background:#eff6ff;color:#2563eb;border-radius:3px;padding:2px 7px;font-weight:500}
-.cv-tag-outline{font-size:0.7rem;background:#fff;border:1px solid #e2e8f0;border-radius:99px;padding:2px 9px;color:#475569}
+.cv-about-top{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;
+  font-style:italic;
+  font-weight:300;
+  color:#3d3225;
+  line-height:1.65;
+  margin-bottom:20px;
+  max-width:420px;
+}
+
+.cv-contacts-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px 12px;
+}
+.cv-contact-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:0.72rem;
+  color:#5a4e3d;
+  text-decoration:none;
+  overflow:hidden;
+}
+.cv-contact-item svg{
+  width:13px;height:13px;
+  stroke:#c9a84c;stroke-width:2;
+  fill:none;flex-shrink:0;
+}
+.cv-contact-item span{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.cv-contact-item:hover{color:#c9a84c}
+
+/* gold divider between top and body */
+.cv-gold-bar{
+  height:2px;
+  background:linear-gradient(90deg,#162032 260px,#c9a84c 260px,#e0c060 400px,transparent 100%);
+}
+
+/* ── CV BODY ── */
+.cv-body{
+  flex:1;
+  display:flex;
+}
+
+/* left sidebar body */
+.cv-sidebar{
+  width:260px;
+  flex-shrink:0;
+  background:#162032;
+  padding:28px 24px 36px;
+}
+
+.cv-sec-title{
+  font-size:0.58rem;
+  font-weight:700;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:#c9a84c;
+  margin-bottom:14px;
+  padding-bottom:6px;
+  position:relative;
+}
+.cv-sec-title::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,#c9a84c44,transparent);
+}
+
+/* Sidebar section gap */
+.sb-sec{margin-bottom:26px}
+.sb-sec:last-child{margin-bottom:0}
 
 /* Address */
-.cv-addr{font-size:0.78rem;color:#475569;line-height:1.8}
+.sb-addr{
+  font-size:0.75rem;
+  color:#8faac8;
+  line-height:1.85;
+}
 
-/* empty placeholder */
-.placeholder{color:#cbd5e1;font-style:italic;font-size:0.8rem}
+/* Skill bars */
+.sb-skill{margin-bottom:11px}
+.sb-skill-top{
+  display:flex;justify-content:space-between;
+  font-size:0.73rem;color:#cdd8e3;font-weight:500;margin-bottom:4px;
+}
+.sb-skill-lvl{color:#5d7a96;font-size:0.65rem;font-weight:400}
+.sb-bar{height:3px;background:#1e3050;border-radius:10px}
+.sb-fill{
+  height:100%;
+  border-radius:10px;
+  background:linear-gradient(90deg,#c9a84c,#e6c96b);
+  transition:width 0.4s ease;
+}
 
+/* Languages */
+.sb-lang{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;
+  font-size:0.73rem;color:#cdd8e3;font-weight:500;
+}
+.sb-dots{display:flex;gap:4px}
+.sb-dot{width:7px;height:7px;border-radius:50%;background:#1e3050}
+.sb-dot.on{background:#c9a84c}
+
+/* Tools / interests tags in sidebar */
+.sb-tags{display:flex;flex-wrap:wrap;gap:5px}
+.sb-tag{
+  font-size:0.62rem;
+  background:#1e3050;
+  color:#8faac8;
+  border-radius:3px;
+  padding:2px 8px;
+  font-weight:500;
+}
+
+/* ── MAIN CONTENT ── */
+.cv-main{
+  flex:1;
+  padding:28px 36px 36px;
+  background:#fff;
+}
+
+.main-sec{margin-bottom:26px}
+.main-sec:last-child{margin-bottom:0}
+
+.main-sec-title{
+  font-size:0.58rem;
+  font-weight:700;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:#162032;
+  margin-bottom:14px;
+  padding-bottom:6px;
+  position:relative;
+}
+.main-sec-title::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,#c9a84c,#c9a84c22,transparent);
+}
+
+/* Education entry */
+.edu-entry-cv{
+  margin-bottom:16px;
+  padding-left:12px;
+  border-left:2px solid #e8e0d0;
+  position:relative;
+}
+.edu-entry-cv::before{
+  content:'';
+  position:absolute;left:-5px;top:4px;
+  width:8px;height:8px;border-radius:50%;
+  background:#c9a84c;border:2px solid #fff;
+  box-shadow:0 0 0 1px #c9a84c;
+}
+.edu-entry-cv:last-child{margin-bottom:0}
+
+.edu-deg{font-size:0.88rem;font-weight:600;color:#162032}
+.edu-school{font-size:0.78rem;color:#c9a84c;font-weight:500;margin-top:1px}
+.edu-meta{font-size:0.68rem;color:#9a8f80;margin-top:2px}
+
+/* Project entries */
+.proj-entry{
+  margin-bottom:16px;
+  padding:12px 14px;
+  border-radius:5px;
+  background:#fdf9f2;
+  border:1px solid #ede6d4;
+  position:relative;
+}
+.proj-entry:last-child{margin-bottom:0}
+.proj-name{font-size:0.85rem;font-weight:600;color:#162032}
+.proj-desc{font-size:0.75rem;color:#6b5e4c;line-height:1.65;margin-top:4px}
+.proj-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.proj-tag{
+  font-size:0.62rem;
+  background:#162032;
+  color:#c9a84c;
+  border-radius:3px;
+  padding:2px 7px;
+  font-weight:600;
+  letter-spacing:0.04em;
+}
+
+/* Placeholder text */
+.ph{color:#c8b89a;font-style:italic;font-size:0.78rem}
+
+/* ─── PRINT ─── */
 @media print{
-  body{background:white}
-  .panel{display:none}
-  .preview-wrap{padding:0;background:white}
-  .cv{box-shadow:none;max-width:100%}
+  body{
+    display:block;
+    height:auto;
+    background:white;
+  }
+  .form-panel{display:none}
+  .preview-area{
+    display:block;
+    padding:0;
+    background:white;
+    overflow:visible;
+  }
+  #cv{
+    width:100%;
+    box-shadow:none;
+    min-height:0;
+  }
+  @page{margin:0;size:A4}
 }
 </style>
 </head>
 <body>
 
-<!-- ════ FORM PANEL ════ -->
-<div class="panel">
-  <div class="panel-title">🎓 CV Builder</div>
-  <div class="panel-sub">Fill in your details — preview updates instantly</div>
-
-  <!-- PHOTO -->
-  <div class="section-header">Photo</div>
-  <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-    <img id="photoPreview" src="" alt="preview"/>
-    <p>Click to upload your photo</p>
-    <span>JPG, PNG supported</span>
+<!-- ══════════ FORM PANEL ══════════ -->
+<div class="form-panel">
+  <div class="form-header">
+    <h2>✦ CV Builder</h2>
+    <p>Fill in details — preview updates live</p>
   </div>
-  <input type="file" id="photoInput" accept="image/*" style="display:none"/>
 
-  <!-- PERSONAL INFO -->
-  <div class="section-header">Personal Info</div>
-  <label>Full Name</label>
-  <input type="text" id="name" placeholder="e.g. Rahul Sharma" oninput="update()"/>
-  <label>Title / Field of Study</label>
-  <input type="text" id="title" placeholder="e.g. BCA Student · Computer Applications" oninput="update()"/>
-  <label>About Me</label>
-  <textarea id="about" placeholder="Write 2–3 lines about yourself, your interests, and your goals..." oninput="update()"></textarea>
+  <div class="form-scroll">
 
-  <!-- CONTACT -->
-  <div class="section-header">Contact Details</div>
-  <label>Phone Number</label>
-  <input type="text" id="phone" placeholder="+91 98765 43210" oninput="update()"/>
-  <label>Email Address</label>
-  <input type="email" id="email" placeholder="you@email.com" oninput="update()"/>
-  <label>LinkedIn URL</label>
-  <input type="text" id="linkedin" placeholder="linkedin.com/in/yourname" oninput="update()"/>
-  <label>GitHub URL</label>
-  <input type="text" id="github" placeholder="github.com/yourusername" oninput="update()"/>
-  <label>Address</label>
-  <textarea id="address" placeholder="Street, Area, City – Pincode&#10;State, India" style="min-height:56px" oninput="update()"></textarea>
-
-  <!-- EDUCATION -->
-  <div class="section-header">Education</div>
-  <div id="eduList">
-    <div class="edu-entry" data-i="0">
-      <div class="row2">
-        <div><label>Degree / Class</label><input type="text" placeholder="BCA" oninput="update()"/></div>
-        <div><label>Score / %</label><input type="text" placeholder="CGPA 8.5" oninput="update()"/></div>
+    <!-- PHOTO -->
+    <div class="fsec">
+      <div class="fsec-head">Photo</div>
+      <div class="photo-drop" onclick="document.getElementById('photoIn').click()">
+        <img id="photoThumb" src="" alt=""/>
+        <p>Click to upload your photo</p>
+        <b>JPG or PNG</b>
       </div>
-      <label>School / College</label><input type="text" placeholder="College Name" oninput="update()"/>
-      <label>Year</label><input type="text" placeholder="2022 – 2025" oninput="update()"/>
+      <input type="file" id="photoIn" accept="image/*" style="display:none"/>
     </div>
-  </div>
-  <button class="btn-add" onclick="addEdu()">+ Add Education</button>
 
-  <!-- PROGRAMMING SKILLS -->
-  <div class="section-header">Programming Languages / Skills</div>
-  <div id="skillList">
-    <div class="skill-entry">
-      <div class="skill-row">
-        <div><label>Language / Skill</label><input type="text" placeholder="e.g. Python" oninput="update()"/></div>
-        <div><label>Level</label>
-          <select onchange="update()">
-            <option value="90">Expert</option>
-            <option value="75" selected>Advanced</option>
-            <option value="60">Intermediate</option>
-            <option value="40">Beginner</option>
-          </select>
+    <!-- PERSONAL -->
+    <div class="fsec">
+      <div class="fsec-head">Personal Info</div>
+      <label>Full Name</label>
+      <input type="text" id="iName" placeholder="e.g. Aryan Mehta" oninput="render()"/>
+      <label>Title / Field of Study</label>
+      <input type="text" id="iTitle" placeholder="e.g. BCA Student · Computer Applications" oninput="render()"/>
+      <label>About Me (2–3 lines)</label>
+      <textarea id="iAbout" placeholder="Passionate student with a love for building things..." oninput="render()"></textarea>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="fsec">
+      <div class="fsec-head">Contact</div>
+      <label>Phone</label>
+      <input type="text" id="iPhone" placeholder="+91 98765 43210" oninput="render()"/>
+      <label>Email</label>
+      <input type="email" id="iEmail" placeholder="you@email.com" oninput="render()"/>
+      <label>LinkedIn</label>
+      <input type="text" id="iLinkedin" placeholder="linkedin.com/in/yourname" oninput="render()"/>
+      <label>GitHub</label>
+      <input type="text" id="iGithub" placeholder="github.com/yourusername" oninput="render()"/>
+      <label>Address</label>
+      <textarea id="iAddr" placeholder="Street, Area&#10;City – 000000, State" style="min-height:52px" oninput="render()"></textarea>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="fsec">
+      <div class="fsec-head">Education</div>
+      <div id="eduList">
+        <div class="rep-row">
+          <div class="g2">
+            <div><label>Degree / Class</label><input type="text" placeholder="BCA" oninput="render()"/></div>
+            <div><label>Score</label><input type="text" placeholder="CGPA 8.5" oninput="render()"/></div>
+          </div>
+          <label>College / School</label><input type="text" placeholder="College Name" oninput="render()"/>
+          <label>Year</label><input type="text" placeholder="2022 – 2025" oninput="render()"/>
         </div>
       </div>
+      <button class="add-btn" onclick="addEdu()">+ Add Education</button>
     </div>
-  </div>
-  <button class="btn-add" onclick="addSkill()">+ Add Skill</button>
 
-  <!-- TOOLS -->
-  <div class="section-header">Tools & Software</div>
-  <label>Add tools (comma separated)</label>
-  <input type="text" id="tools" placeholder="VS Code, Git, MySQL, Figma, MS Office" oninput="update()"/>
-
-  <!-- LANGUAGES KNOWN -->
-  <div class="section-header">Languages Known</div>
-  <div id="langList">
-    <div class="lang-entry">
-      <div class="lang-row">
-        <div><label>Language</label><input type="text" placeholder="e.g. Hindi" oninput="update()"/></div>
-        <div><label>Fluency</label>
-          <select onchange="update()">
-            <option value="5">Native</option>
-            <option value="4" selected>Fluent</option>
-            <option value="3">Good</option>
-            <option value="2">Basic</option>
-          </select>
+    <!-- SKILLS -->
+    <div class="fsec">
+      <div class="fsec-head">Programming Skills</div>
+      <div id="skillList">
+        <div class="rep-row">
+          <div class="skill-g">
+            <div><label>Language / Skill</label><input type="text" placeholder="Python" oninput="render()"/></div>
+            <div><label>Level</label>
+              <select onchange="render()">
+                <option value="95">Expert</option>
+                <option value="78" selected>Advanced</option>
+                <option value="58">Intermediate</option>
+                <option value="35">Beginner</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
+      <button class="add-btn" onclick="addSkill()">+ Add Skill</button>
     </div>
+
+    <!-- TOOLS -->
+    <div class="fsec">
+      <div class="fsec-head">Tools & Software</div>
+      <label>Comma separated</label>
+      <input type="text" id="iTools" placeholder="VS Code, Git, MySQL, Figma, Linux" oninput="render()"/>
+    </div>
+
+    <!-- LANGUAGES -->
+    <div class="fsec">
+      <div class="fsec-head">Languages Known</div>
+      <div id="langList">
+        <div class="rep-row">
+          <div class="lang-g">
+            <div><label>Language</label><input type="text" placeholder="Hindi" oninput="render()"/></div>
+            <div><label>Fluency</label>
+              <select onchange="render()">
+                <option value="5">Native</option>
+                <option value="4" selected>Fluent</option>
+                <option value="3">Good</option>
+                <option value="2">Basic</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addLang()">+ Add Language</button>
+    </div>
+
+    <!-- INTERESTS -->
+    <div class="fsec">
+      <div class="fsec-head">Interests</div>
+      <label>Comma separated</label>
+      <input type="text" id="iInterests" placeholder="Cybersecurity, Gaming, Design, Open Source" oninput="render()"/>
+    </div>
+
+  </div><!-- /form-scroll -->
+
+  <div class="form-footer">
+    <button class="print-btn" onclick="window.print()">⬇ Download / Print PDF</button>
   </div>
-  <button class="btn-add" onclick="addLang()">+ Add Language</button>
-
-  <!-- INTERESTS -->
-  <div class="section-header">Interests</div>
-  <label>Add interests (comma separated)</label>
-  <input type="text" id="interests" placeholder="Cybersecurity, Gaming, Photography, Design" oninput="update()"/>
-
-  <button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
 </div>
 
-<!-- ════ PREVIEW ════ -->
-<div class="preview-wrap">
-  <div class="cv">
+<!-- ══════════ PREVIEW ══════════ -->
+<div class="preview-area">
+  <div id="cv">
 
-    <!-- HEADER -->
-    <div class="cv-header">
-      <div class="cv-photo" id="cvPhoto">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <!-- TOP BAND -->
+    <div class="cv-top">
+      <!-- sidebar top -->
+      <div class="cv-top-left">
+        <div class="cv-photo-ring" id="cvPhotoWrap">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="cv-name-block">
+          <div class="cv-name" id="cvName"><span class="ph">Your Name</span></div>
+          <div class="cv-field" id="cvField"><span style="color:#4a6080;font-style:italic">Title / Field</span></div>
+        </div>
       </div>
-      <div style="flex:1">
-        <div class="cv-name" id="cvName"><span class="placeholder">Your Name</span></div>
-        <div class="cv-title" id="cvTitle"><span class="placeholder">Your Title</span></div>
-        <div class="cv-contacts" id="cvContacts"></div>
+
+      <!-- right top -->
+      <div class="cv-top-right">
+        <div class="cv-about-top" id="cvAbout"><span class="ph">Your about me will appear here as an elegant intro...</span></div>
+        <div class="cv-contacts-grid" id="cvContacts"></div>
       </div>
     </div>
+
+    <!-- gold bar -->
+    <div class="cv-gold-bar"></div>
 
     <!-- BODY -->
     <div class="cv-body">
+
+      <!-- SIDEBAR -->
+      <div class="cv-sidebar">
+
+        <div class="sb-sec">
+          <div class="cv-sec-title">Address</div>
+          <div class="sb-addr" id="cvAddr"><span class="ph">Your address</span></div>
+        </div>
+
+        <div class="sb-sec">
+          <div class="cv-sec-title">Programming Skills</div>
+          <div id="cvSkills"><span class="ph">Skills...</span></div>
+        </div>
+
+        <div class="sb-sec">
+          <div class="cv-sec-title">Tools</div>
+          <div class="sb-tags" id="cvTools"><span class="ph">Tools...</span></div>
+        </div>
+
+        <div class="sb-sec">
+          <div class="cv-sec-title">Languages</div>
+          <div id="cvLangs"><span class="ph">Languages...</span></div>
+        </div>
+
+        <div class="sb-sec">
+          <div class="cv-sec-title">Interests</div>
+          <div class="sb-tags" id="cvInterests"><span class="ph">Interests...</span></div>
+        </div>
+
+      </div><!-- /sidebar -->
+
+      <!-- MAIN -->
       <div class="cv-main">
 
-        <div class="cv-section">
-          <div class="cv-section-title">About Me</div>
-          <div class="cv-about" id="cvAbout"><span class="placeholder">Your description will appear here...</span></div>
+        <div class="main-sec">
+          <div class="main-sec-title">Education</div>
+          <div id="cvEdu"><span class="ph">Your education will appear here...</span></div>
         </div>
 
-        <div class="cv-section">
-          <div class="cv-section-title">Education</div>
-          <div id="cvEdu"></div>
+        <div class="main-sec">
+          <div class="main-sec-title">Projects</div>
+          <div id="cvProjects">
+            <!-- static sample projects — user can extend later -->
+            <div class="proj-entry">
+              <div class="proj-name">Personal Portfolio Website</div>
+              <div class="proj-desc">Designed and built a fully responsive portfolio site with dark mode, animated sections, and a contact form.</div>
+              <div class="proj-tags">
+                <span class="proj-tag">HTML</span>
+                <span class="proj-tag">CSS</span>
+                <span class="proj-tag">JavaScript</span>
+              </div>
+            </div>
+            <div class="proj-entry">
+              <div class="proj-name">Student Result Management System</div>
+              <div class="proj-desc">Desktop app for managing and viewing student results with login authentication — college mini-project.</div>
+              <div class="proj-tags">
+                <span class="proj-tag">Python</span>
+                <span class="proj-tag">Tkinter</span>
+                <span class="proj-tag">MySQL</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-      </div>
-      <div class="cv-side">
+      </div><!-- /main -->
+    </div><!-- /body -->
 
-        <div class="cv-section">
-          <div class="cv-section-title">Address</div>
-          <div class="cv-addr" id="cvAddr"><span class="placeholder">Your address</span></div>
-        </div>
-
-        <div class="cv-section">
-          <div class="cv-section-title">Programming Skills</div>
-          <div id="cvSkills"></div>
-        </div>
-
-        <div class="cv-section">
-          <div class="cv-section-title">Tools & Software</div>
-          <div class="tags" id="cvTools"></div>
-        </div>
-
-        <div class="cv-section">
-          <div class="cv-section-title">Languages Known</div>
-          <div id="cvLangs"></div>
-        </div>
-
-        <div class="cv-section">
-          <div class="cv-section-title">Interests</div>
-          <div class="tags" id="cvInterests"></div>
-        </div>
-
-      </div>
-    </div>
-  </div>
+  </div><!-- /cv -->
 </div>
 
 <script>
-// ── PHOTO UPLOAD ──
-document.getElementById('photoInput').addEventListener('change', function(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev){
-    document.getElementById('photoPreview').src = ev.target.result;
-    document.getElementById('photoPreview').style.display = 'block';
-    document.querySelector('.photo-upload p').style.display = 'none';
-    document.querySelector('.photo-upload span').textContent = 'Click to change photo';
-    document.getElementById('cvPhoto').innerHTML = `<img src="${ev.target.result}" alt="photo"/>`;
+/* ── PHOTO ── */
+document.getElementById('photoIn').addEventListener('change',function(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=function(ev){
+    document.getElementById('photoThumb').src=ev.target.result;
+    document.getElementById('photoThumb').style.display='block';
+    document.querySelector('.photo-drop p').textContent='Click to change photo';
+    document.getElementById('cvPhotoWrap').innerHTML=`<img src="${ev.target.result}" alt="photo"/>`;
   };
-  reader.readAsDataURL(file);
+  r.readAsDataURL(f);
 });
 
-// ── ADD EDUCATION ROW ──
+/* ── ADD ROWS ── */
 function addEdu(){
-  const list = document.getElementById('eduList');
-  const div = document.createElement('div');
-  div.className = 'edu-entry';
-  div.style.marginTop = '14px';
-  div.style.paddingTop = '14px';
-  div.style.borderTop = '1px solid #334155';
-  div.innerHTML = `
-    <div style="display:flex;justify-content:flex-end"><button class="btn-remove" onclick="this.closest('.edu-entry').remove();update()" title="Remove">✕</button></div>
-    <div class="row2">
-      <div><label>Degree / Class</label><input type="text" placeholder="10th / 12th / BCA" oninput="update()"/></div>
-      <div><label>Score / %</label><input type="text" placeholder="90%" oninput="update()"/></div>
+  const d=document.createElement('div');
+  d.className='rep-row';
+  d.innerHTML=`
+    <button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+    <div class="g2">
+      <div><label>Degree / Class</label><input type="text" placeholder="10th / 12th / BCA" oninput="render()"/></div>
+      <div><label>Score</label><input type="text" placeholder="90%" oninput="render()"/></div>
     </div>
-    <label>School / College</label><input type="text" placeholder="School or College Name" oninput="update()"/>
-    <label>Year</label><input type="text" placeholder="2020 – 2022" oninput="update()"/>
+    <label>College / School</label><input type="text" placeholder="School Name" oninput="render()"/>
+    <label>Year</label><input type="text" placeholder="2020 – 2022" oninput="render()"/>
   `;
-  list.appendChild(div);
+  document.getElementById('eduList').appendChild(d);
 }
-
-// ── ADD SKILL ROW ──
 function addSkill(){
-  const list = document.getElementById('skillList');
-  const div = document.createElement('div');
-  div.className = 'skill-entry';
-  div.innerHTML = `
-    <div class="skill-row">
-      <div><label>Language / Skill</label><input type="text" placeholder="e.g. JavaScript" oninput="update()"/></div>
+  const d=document.createElement('div');
+  d.className='rep-row';
+  d.innerHTML=`
+    <button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+    <div class="skill-g">
+      <div><label>Language / Skill</label><input type="text" placeholder="JavaScript" oninput="render()"/></div>
       <div><label>Level</label>
-        <select onchange="update()">
-          <option value="90">Expert</option>
-          <option value="75">Advanced</option>
-          <option value="60" selected>Intermediate</option>
-          <option value="40">Beginner</option>
+        <select onchange="render()">
+          <option value="95">Expert</option>
+          <option value="78">Advanced</option>
+          <option value="58" selected>Intermediate</option>
+          <option value="35">Beginner</option>
         </select>
       </div>
     </div>
-    <div style="text-align:right;margin-top:-4px"><button class="btn-remove" onclick="this.closest('.skill-entry').remove();update()" title="Remove">✕ remove</button></div>
   `;
-  list.appendChild(div);
+  document.getElementById('skillList').appendChild(d);
 }
-
-// ── ADD LANGUAGE ROW ──
 function addLang(){
-  const list = document.getElementById('langList');
-  const div = document.createElement('div');
-  div.className = 'lang-entry';
-  div.innerHTML = `
-    <div class="lang-row">
-      <div><label>Language</label><input type="text" placeholder="e.g. Tamil" oninput="update()"/></div>
+  const d=document.createElement('div');
+  d.className='rep-row';
+  d.innerHTML=`
+    <button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+    <div class="lang-g">
+      <div><label>Language</label><input type="text" placeholder="Tamil" oninput="render()"/></div>
       <div><label>Fluency</label>
-        <select onchange="update()">
+        <select onchange="render()">
           <option value="5">Native</option>
           <option value="4">Fluent</option>
           <option value="3" selected>Good</option>
@@ -361,107 +796,108 @@ function addLang(){
         </select>
       </div>
     </div>
-    <div style="text-align:right;margin-top:-4px"><button class="btn-remove" onclick="this.closest('.lang-entry').remove();update()" title="Remove">✕ remove</button></div>
   `;
-  list.appendChild(div);
+  document.getElementById('langList').appendChild(d);
 }
 
-// ── MAIN UPDATE FUNCTION ──
-function update(){
-  const v = id => document.getElementById(id)?.value?.trim() || '';
-  const set = (id, html) => { document.getElementById(id).innerHTML = html; };
+/* ── HELPERS ── */
+const v=id=>(document.getElementById(id)?.value||'').trim();
+const set=(id,h)=>{document.getElementById(id).innerHTML=h};
+const icon=(path,extra='')=>`<svg viewBox="0 0 24 24" ${extra}>${path}</svg>`;
 
-  // Name & title
-  set('cvName', v('name') || '<span class="placeholder">Your Name</span>');
-  set('cvTitle', v('title') || '<span class="placeholder">Your Title / Field</span>');
+const ICONS={
+  phone:`<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.41 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.5 7.11A16 16 0 0013.88 14l.82-.82a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>`,
+  email:`<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>`,
+  linkedin:`<path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>`,
+  github:`<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>`,
+};
 
-  // About
-  set('cvAbout', v('about') ? v('about').replace(/\n/g,'<br/>') : '<span class="placeholder">Your description will appear here...</span>');
+function contactItem(iconKey,text,href){
+  return `<a class="cv-contact-item" href="${href}" target="_blank">${icon(ICONS[iconKey])}<span>${text}</span></a>`;
+}
 
-  // Contacts
-  let contacts = '';
-  const phone = v('phone'), email = v('email'), linkedin = v('linkedin'), github = v('github');
-  if(phone) contacts += contact(phoneSvg, phone, '#');
-  if(email) contacts += contact(emailSvg, email, 'mailto:'+email);
-  if(linkedin) contacts += contact(linkedinSvg, linkedin, 'https://'+linkedin.replace(/^https?:\/\//,''));
-  if(github) contacts += contact(githubSvg, github, 'https://'+github.replace(/^https?:\/\//,''));
-  set('cvContacts', contacts || '<span class="placeholder" style="font-size:0.78rem">Phone · Email · LinkedIn · GitHub</span>');
+const lvlLabel={95:'Expert',78:'Advanced',58:'Intermediate',35:'Beginner'};
 
-  // Address
-  const addr = v('address');
-  set('cvAddr', addr ? addr.replace(/\n/g,'<br/>') : '<span class="placeholder">Your address</span>');
+/* ── MAIN RENDER ── */
+function render(){
+  // name & field
+  set('cvName', v('iName')||'<span class="ph">Your Name</span>');
+  set('cvField', v('iTitle')||'<span style="color:#4a6080;font-style:italic">Title / Field</span>');
 
-  // Education
-  let eduHtml = '';
-  document.querySelectorAll('.edu-entry').forEach(entry => {
-    const inputs = entry.querySelectorAll('input');
-    const degree = inputs[0]?.value?.trim();
-    const score  = inputs[1]?.value?.trim();
-    const school = inputs[2]?.value?.trim();
-    const year   = inputs[3]?.value?.trim();
-    if(degree || school){
-      eduHtml += `<div class="edu" style="margin-bottom:14px">
-        <div class="edu-degree">${degree||'—'} ${score ? '<span style="font-weight:400;font-size:0.75rem;color:#64748b">· '+score+'</span>' : ''}</div>
-        ${school ? `<div class="edu-school">${school}</div>` : ''}
-        ${year   ? `<div class="edu-meta">${year}</div>` : ''}
+  // about
+  const ab=v('iAbout');
+  set('cvAbout', ab ? ab.replace(/\n/g,'<br/>') : '<span class="ph">Your about me will appear here as an elegant intro...</span>');
+
+  // contacts
+  let ct='';
+  if(v('iPhone'))    ct+=contactItem('phone',   v('iPhone'),   '#');
+  if(v('iEmail'))    ct+=contactItem('email',   v('iEmail'),   'mailto:'+v('iEmail'));
+  if(v('iLinkedin')) ct+=contactItem('linkedin',v('iLinkedin'),'https://'+v('iLinkedin').replace(/^https?:\/\//,''));
+  if(v('iGithub'))   ct+=contactItem('github',  v('iGithub'),  'https://'+v('iGithub').replace(/^https?:\/\//,''));
+  set('cvContacts', ct||'<span class="ph" style="font-size:0.72rem">Phone · Email · LinkedIn · GitHub</span>');
+
+  // address
+  const ad=v('iAddr');
+  set('cvAddr', ad ? ad.replace(/\n/g,'<br/>') : '<span class="ph">Your address</span>');
+
+  // education
+  let eduH='';
+  document.querySelectorAll('#eduList .rep-row').forEach(r=>{
+    const inp=r.querySelectorAll('input');
+    const deg=inp[0]?.value.trim(), score=inp[1]?.value.trim(),
+          sch=inp[2]?.value.trim(), yr=inp[3]?.value.trim();
+    if(deg||sch){
+      eduH+=`<div class="edu-entry-cv">
+        <div class="edu-deg">${deg||'—'}${score?` <span style="font-weight:400;font-size:0.7rem;color:#9a8f80">· ${score}</span>`:''}
+        </div>
+        ${sch?`<div class="edu-school">${sch}</div>`:''}
+        ${yr?`<div class="edu-meta">${yr}</div>`:''}
       </div>`;
     }
   });
-  set('cvEdu', eduHtml || '<span class="placeholder">Your education entries...</span>');
+  set('cvEdu', eduH||'<span class="ph">Your education entries...</span>');
 
-  // Skills
-  let skillHtml = '';
-  document.querySelectorAll('.skill-entry').forEach(entry => {
-    const name = entry.querySelector('input')?.value?.trim();
-    const pct  = entry.querySelector('select')?.value || '60';
-    const labels = {'90':'Expert','75':'Advanced','60':'Intermediate','40':'Beginner'};
+  // skills
+  let skH='';
+  document.querySelectorAll('#skillList .rep-row').forEach(r=>{
+    const name=r.querySelector('input')?.value.trim();
+    const pct=r.querySelector('select')?.value||'58';
     if(name){
-      skillHtml += `<div class="skill">
-        <div class="skill-label-row"><span>${name}</span><span class="skill-pct">${labels[pct]}</span></div>
-        <div class="skill-bar"><div class="skill-fill" style="width:${pct}%"></div></div>
+      skH+=`<div class="sb-skill">
+        <div class="sb-skill-top"><span>${name}</span><span class="sb-skill-lvl">${lvlLabel[pct]||''}</span></div>
+        <div class="sb-bar"><div class="sb-fill" style="width:${pct}%"></div></div>
       </div>`;
     }
   });
-  set('cvSkills', skillHtml || '<span class="placeholder">Your skills...</span>');
+  set('cvSkills', skH||'<span class="ph">Skills...</span>');
 
-  // Tools
-  const toolsRaw = v('tools');
-  const toolsHtml = toolsRaw
-    ? toolsRaw.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="cv-tag">${t}</span>`).join('')
-    : '<span class="placeholder">Tools...</span>';
-  set('cvTools', toolsHtml);
+  // tools
+  const tl=v('iTools');
+  set('cvTools', tl
+    ? tl.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join('')
+    : '<span class="ph">Tools...</span>');
 
-  // Languages
-  let langHtml = '';
-  document.querySelectorAll('.lang-entry').forEach(entry => {
-    const name = entry.querySelector('input')?.value?.trim();
-    const lvl  = parseInt(entry.querySelector('select')?.value || '3');
+  // languages
+  let lgH='';
+  document.querySelectorAll('#langList .rep-row').forEach(r=>{
+    const name=r.querySelector('input')?.value.trim();
+    const lvl=parseInt(r.querySelector('select')?.value||'3');
     if(name){
-      let dots = '';
-      for(let i=1;i<=5;i++) dots += `<div class="dot ${i<=lvl?'on':''}"></div>`;
-      langHtml += `<div class="lang"><span class="lang-name">${name}</span><div class="dots">${dots}</div></div>`;
+      let dots='';
+      for(let i=1;i<=5;i++) dots+=`<div class="sb-dot${i<=lvl?' on':''}"></div>`;
+      lgH+=`<div class="sb-lang"><span>${name}</span><div class="sb-dots">${dots}</div></div>`;
     }
   });
-  set('cvLangs', langHtml || '<span class="placeholder">Your languages...</span>');
+  set('cvLangs', lgH||'<span class="ph">Languages...</span>');
 
-  // Interests
-  const intRaw = v('interests');
-  const intHtml = intRaw
-    ? intRaw.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="cv-tag-outline">${t}</span>`).join('')
-    : '<span class="placeholder">Interests...</span>';
-  set('cvInterests', intHtml);
+  // interests
+  const it=v('iInterests');
+  set('cvInterests', it
+    ? it.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join('')
+    : '<span class="ph">Interests...</span>');
 }
 
-function contact(svg, text, href){
-  return `<a class="cv-contact" href="${href}" target="_blank">${svg}${text}</a>`;
-}
-
-const phoneSvg = `<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.41 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.5 7.11A16 16 0 0013.88 14l.82-.82a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>`;
-const emailSvg = `<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
-const linkedinSvg = `<svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`;
-const githubSvg = `<svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>`;
-
-update();
+render();
 </script>
 </body>
 </html>
