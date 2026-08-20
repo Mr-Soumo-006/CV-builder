@@ -2,72 +2,112 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>CV Builder</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
+/* ── RESET ── */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-
+html{height:100%}
 body{
   font-family:'DM Sans',sans-serif;
   background:#0d1117;
+  height:100%;
   display:flex;
-  height:100vh;
+  flex-direction:column;
+  overflow:hidden;
 }
 
-/* ─── FORM PANEL ─── */
+/* ════════════════════════════════
+   MOBILE TAB BAR  (hidden on desktop)
+════════════════════════════════ */
+.mob-tabs{
+  display:none;
+  flex-shrink:0;
+  background:#161b22;
+  border-bottom:1px solid #21262d;
+}
+.mob-tab{
+  flex:1;
+  padding:13px 0;
+  border:none;
+  background:transparent;
+  color:#7d8590;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;
+  font-weight:500;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:color 0.15s,border-color 0.15s;
+}
+.mob-tab.active{color:#c9a84c;border-bottom-color:#c9a84c}
+
+/* ════════════════════════════════
+   MAIN LAYOUT
+════════════════════════════════ */
+.app-body{
+  flex:1;
+  display:flex;
+  overflow:hidden;
+  min-height:0;
+}
+
+/* ── FORM PANEL ── */
 .form-panel{
-  width:320px;
+  width:310px;
   min-width:280px;
   background:#161b22;
   display:flex;
   flex-direction:column;
-  height:100vh;
   border-right:1px solid #21262d;
   flex-shrink:0;
-  z-index:10;
+  overflow:hidden;
 }
 .form-header{
-  padding:16px 20px 12px;
+  padding:14px 18px 11px;
   border-bottom:1px solid #21262d;
   flex-shrink:0;
 }
-.form-header h2{color:#e6edf3;font-size:0.9rem;font-weight:600}
-.form-header p{color:#7d8590;font-size:0.68rem;margin-top:2px}
+.form-header h2{color:#e6edf3;font-size:0.88rem;font-weight:600}
+.form-header p{color:#7d8590;font-size:0.67rem;margin-top:2px}
 
 .form-scroll{
   flex:1;
   overflow-y:auto;
-  padding:12px 18px 20px;
+  padding:10px 16px 20px;
+  -webkit-overflow-scrolling:touch;
 }
 .form-scroll::-webkit-scrollbar{width:3px}
 .form-scroll::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
 
 .fsec-head{
   display:flex;align-items:center;gap:7px;
-  font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
-  color:#c9a84c;padding:12px 0 7px;border-bottom:1px solid #21262d;margin-bottom:9px;
+  font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  color:#c9a84c;padding:11px 0 7px;border-bottom:1px solid #21262d;margin-bottom:8px;
 }
-.fsec-head::before{content:'';width:3px;height:9px;background:#c9a84c;border-radius:2px;flex-shrink:0}
+.fsec-head::before{content:'';width:3px;height:8px;background:#c9a84c;border-radius:2px;flex-shrink:0}
 
 label{display:block;font-size:0.65rem;font-weight:500;color:#7d8590;margin-bottom:3px;margin-top:8px}
 label:first-of-type{margin-top:0}
 
 input[type=text],input[type=email],textarea,select{
   width:100%;background:#0d1117;border:1px solid #30363d;border-radius:5px;
-  padding:6px 9px;color:#e6edf3;font-size:0.75rem;font-family:'DM Sans',sans-serif;
+  padding:8px 10px;color:#e6edf3;font-size:0.78rem;font-family:'DM Sans',sans-serif;
   outline:none;transition:border-color 0.15s;
+  /* bigger tap targets on mobile */
+  -webkit-appearance:none;
 }
 input[type=text]:focus,input[type=email]:focus,textarea:focus,select:focus{
   border-color:#c9a84c;box-shadow:0 0 0 2px rgba(201,168,76,0.08);
 }
 input::placeholder,textarea::placeholder{color:#484f58}
-textarea{resize:vertical;min-height:58px;line-height:1.5}
-select{cursor:pointer;appearance:none;
+textarea{resize:vertical;min-height:56px;line-height:1.5}
+select{
+  cursor:pointer;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237d8590'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 9px center}
+  background-repeat:no-repeat;background-position:right 9px center;
+}
 
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .g2 label{margin-top:0}
@@ -78,7 +118,7 @@ select{cursor:pointer;appearance:none;
 }
 .rep-row .remove-btn{
   position:absolute;top:6px;right:6px;background:none;border:none;
-  color:#484f58;font-size:0.7rem;cursor:pointer;padding:2px 4px;border-radius:3px;
+  color:#484f58;font-size:0.7rem;cursor:pointer;padding:3px 5px;border-radius:3px;
   transition:color 0.15s,background 0.15s;
 }
 .rep-row .remove-btn:hover{color:#f85149;background:rgba(248,81,73,0.08)}
@@ -89,11 +129,12 @@ select{cursor:pointer;appearance:none;
 
 .add-btn{
   width:100%;border:1px dashed #30363d;background:transparent;color:#7d8590;
-  font-size:0.68rem;font-family:'DM Sans',sans-serif;padding:6px;border-radius:5px;
+  font-size:0.68rem;font-family:'DM Sans',sans-serif;padding:7px;border-radius:5px;
   cursor:pointer;transition:all 0.15s;margin-top:3px;
 }
-.add-btn:hover{border-color:#c9a84c;color:#c9a84c}
+.add-btn:hover,.add-btn:active{border-color:#c9a84c;color:#c9a84c}
 
+/* Photo */
 .photo-drop{
   border:1px dashed #30363d;border-radius:6px;padding:12px;
   text-align:center;cursor:pointer;transition:border-color 0.15s;background:#0d1117;
@@ -106,19 +147,24 @@ select{cursor:pointer;appearance:none;
   margin:0 auto 7px;display:none;border:2px solid #c9a84c;
 }
 
-.form-footer{padding:10px 18px;border-top:1px solid #21262d;flex-shrink:0;display:flex;gap:7px}
+/* Footer buttons */
+.form-footer{
+  padding:10px 16px;border-top:1px solid #21262d;
+  flex-shrink:0;display:flex;gap:7px;
+}
 .dl-btn{
   flex:1;background:linear-gradient(135deg,#c9a84c,#e6c96b);border:none;border-radius:6px;
-  color:#0d1117;font-size:0.78rem;font-weight:700;padding:9px 6px;cursor:pointer;
+  color:#0d1117;font-size:0.78rem;font-weight:700;padding:10px 6px;cursor:pointer;
   font-family:'DM Sans',sans-serif;letter-spacing:0.02em;transition:opacity 0.15s;
 }
-.dl-btn:hover{opacity:0.88}
+.dl-btn:hover,.dl-btn:active{opacity:0.85}
 .dl-btn.secondary{
   background:transparent;border:1px solid #30363d;color:#7d8590;font-weight:500;
 }
-.dl-btn.secondary:hover{border-color:#c9a84c;color:#c9a84c;opacity:1}
+.dl-btn.secondary:hover,.dl-btn.secondary:active{border-color:#c9a84c;color:#c9a84c;opacity:1}
+.dl-btn:disabled{opacity:0.5;cursor:not-allowed}
 
-/* ─── PREVIEW AREA ─── */
+/* ── PREVIEW AREA ── */
 .preview-area{
   flex:1;
   overflow:auto;
@@ -126,28 +172,26 @@ select{cursor:pointer;appearance:none;
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding:24px 16px;
-  position:relative;
+  padding:20px 12px 28px;
+  -webkit-overflow-scrolling:touch;
 }
-.preview-area::-webkit-scrollbar{width:5px}
+.preview-area::-webkit-scrollbar{width:4px}
 .preview-area::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 
-/* scale wrapper — makes CV always fit preview */
+/* Scale wrapper */
 .cv-scale-wrap{
-  /* JS sets transform-origin and scale */
-  transform-origin: top center;
+  transform-origin:top center;
   flex-shrink:0;
-  margin-bottom:24px;
 }
 
-/* ═══════════════════════════════════════
-   THE CV  (always 794px wide = A4)
-═══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   THE CV — fixed A4 width, always scaled
+══════════════════════════════════════ */
 #cv{
   width:794px;
   min-height:1122px;
   background:#fff;
-  box-shadow:0 12px 48px rgba(0,0,0,0.55);
+  box-shadow:0 10px 44px rgba(0,0,0,0.5);
   display:flex;
   flex-direction:column;
   font-family:'DM Sans',sans-serif;
@@ -155,50 +199,48 @@ select{cursor:pointer;appearance:none;
 }
 
 /* TOP BAND */
-.cv-top{display:flex;background:#f8f5ef;min-height:190px}
+.cv-top{display:flex;background:#f8f5ef;min-height:185px}
 
 .cv-top-left{
   width:250px;flex-shrink:0;background:#162032;
-  padding:32px 24px 28px;display:flex;flex-direction:column;
+  padding:30px 22px 26px;display:flex;flex-direction:column;
   align-items:center;text-align:center;position:relative;
 }
 .cv-top-left::before{
   content:'';position:absolute;top:0;left:0;right:0;height:4px;
   background:linear-gradient(90deg,#c9a84c,#e6c96b,#c9a84c);
 }
-
 .cv-photo-ring{
-  width:90px;height:90px;border-radius:50%;border:3px solid #c9a84c;
+  width:88px;height:88px;border-radius:50%;border:3px solid #c9a84c;
   overflow:hidden;background:#1e2d40;display:flex;align-items:center;
-  justify-content:center;margin-bottom:12px;flex-shrink:0;
+  justify-content:center;margin-bottom:11px;flex-shrink:0;
 }
 .cv-photo-ring img{width:100%;height:100%;object-fit:cover;display:block}
-.cv-photo-ring svg{width:34px;height:34px;fill:none;stroke:#4a6080;stroke-width:1.5}
-
+.cv-photo-ring svg{width:32px;height:32px;fill:none;stroke:#4a6080;stroke-width:1.5}
 .cv-name{
-  font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;
+  font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;
   line-height:1.1;color:#f0ead8;
 }
 .cv-field{
-  font-size:0.6rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;
+  font-size:0.58rem;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;
   color:#c9a84c;margin-top:5px;
 }
 
 .cv-top-right{
-  flex:1;padding:32px 32px 28px 28px;display:flex;
+  flex:1;padding:30px 30px 26px 26px;display:flex;
   flex-direction:column;justify-content:flex-end;background:#f8f5ef;
 }
 .cv-about-top{
-  font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;
-  font-weight:300;color:#3d3225;line-height:1.65;margin-bottom:16px;max-width:420px;
+  font-family:'Cormorant Garamond',serif;font-size:0.98rem;font-style:italic;
+  font-weight:300;color:#3d3225;line-height:1.65;margin-bottom:14px;max-width:420px;
 }
 .cv-contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px}
 .cv-contact-item{
-  display:flex;align-items:center;gap:6px;font-size:0.68rem;
+  display:flex;align-items:center;gap:6px;font-size:0.67rem;
   color:#5a4e3d;text-decoration:none;overflow:hidden;
 }
 .cv-contact-item svg{
-  width:12px;height:12px;stroke:#c9a84c;stroke-width:2;fill:none;
+  width:11px;height:11px;stroke:#c9a84c;stroke-width:2;fill:none;
   flex-shrink:0;stroke-linecap:round;stroke-linejoin:round;
 }
 .cv-contact-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -213,41 +255,41 @@ select{cursor:pointer;appearance:none;
 .cv-body{flex:1;display:flex}
 
 .cv-sidebar{
-  width:250px;flex-shrink:0;background:#162032;padding:24px 20px 32px;
+  width:250px;flex-shrink:0;background:#162032;padding:22px 18px 30px;
 }
 .cv-sec-title{
-  font-size:0.56rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
-  color:#c9a84c;margin-bottom:12px;padding-bottom:5px;position:relative;
+  font-size:0.55rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:#c9a84c;margin-bottom:11px;padding-bottom:5px;position:relative;
 }
 .cv-sec-title::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,#c9a84c55,transparent);
 }
-.sb-sec{margin-bottom:22px}
+.sb-sec{margin-bottom:20px}
 .sb-sec:last-child{margin-bottom:0}
-.sb-addr{font-size:0.71rem;color:#8faac8;line-height:1.85}
+.sb-addr{font-size:0.7rem;color:#8faac8;line-height:1.85}
 
 .sb-skill{margin-bottom:10px}
-.sb-skill-top{display:flex;justify-content:space-between;font-size:0.7rem;color:#cdd8e3;font-weight:500;margin-bottom:4px}
-.sb-skill-lvl{color:#5d7a96;font-size:0.62rem;font-weight:400}
+.sb-skill-top{display:flex;justify-content:space-between;font-size:0.69rem;color:#cdd8e3;font-weight:500;margin-bottom:4px}
+.sb-skill-lvl{color:#5d7a96;font-size:0.6rem;font-weight:400}
 .sb-bar{height:3px;background:#1e3050;border-radius:10px}
 .sb-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#c9a84c,#e6c96b)}
 
-.sb-lang{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:0.7rem;color:#cdd8e3;font-weight:500}
+.sb-lang{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.69rem;color:#cdd8e3;font-weight:500}
 .sb-dots{display:flex;gap:3px}
 .sb-dot{width:6px;height:6px;border-radius:50%;background:#1e3050}
 .sb-dot.on{background:#c9a84c}
 
 .sb-tags{display:flex;flex-wrap:wrap;gap:4px}
-.sb-tag{font-size:0.6rem;background:#1e3050;color:#8faac8;border-radius:3px;padding:2px 7px;font-weight:500}
+.sb-tag{font-size:0.59rem;background:#1e3050;color:#8faac8;border-radius:3px;padding:2px 7px;font-weight:500}
 
-.cv-main{flex:1;padding:24px 32px 32px}
+.cv-main{flex:1;padding:22px 30px 30px}
 
-.main-sec{margin-bottom:22px}
+.main-sec{margin-bottom:20px}
 .main-sec:last-child{margin-bottom:0}
 .main-sec-title{
-  font-size:0.56rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
-  color:#162032;margin-bottom:12px;padding-bottom:5px;position:relative;
+  font-size:0.55rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:#162032;margin-bottom:11px;padding-bottom:5px;position:relative;
 }
 .main-sec-title::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
@@ -255,36 +297,79 @@ select{cursor:pointer;appearance:none;
 }
 
 .edu-entry-cv{
-  margin-bottom:13px;padding-left:12px;border-left:2px solid #e8e0d0;position:relative;
+  margin-bottom:12px;padding-left:11px;border-left:2px solid #e8e0d0;position:relative;
 }
 .edu-entry-cv::before{
   content:'';position:absolute;left:-5px;top:4px;width:8px;height:8px;
   border-radius:50%;background:#c9a84c;border:2px solid #fff;box-shadow:0 0 0 1px #c9a84c;
 }
 .edu-entry-cv:last-child{margin-bottom:0}
-.edu-deg{font-size:0.84rem;font-weight:600;color:#162032}
-.edu-school{font-size:0.74rem;color:#c9a84c;font-weight:500;margin-top:1px}
-.edu-meta{font-size:0.65rem;color:#9a8f80;margin-top:2px}
+.edu-deg{font-size:0.83rem;font-weight:600;color:#162032}
+.edu-school{font-size:0.73rem;color:#c9a84c;font-weight:500;margin-top:1px}
+.edu-meta{font-size:0.64rem;color:#9a8f80;margin-top:2px}
 
 .proj-entry{
-  margin-bottom:12px;padding:10px 12px;border-radius:5px;
+  margin-bottom:11px;padding:10px 12px;border-radius:5px;
   background:#fdf9f2;border:1px solid #ede6d4;
 }
 .proj-entry:last-child{margin-bottom:0}
-.proj-name{font-size:0.82rem;font-weight:600;color:#162032}
-.proj-desc{font-size:0.72rem;color:#6b5e4c;line-height:1.6;margin-top:3px}
+.proj-name{font-size:0.81rem;font-weight:600;color:#162032}
+.proj-desc{font-size:0.71rem;color:#6b5e4c;line-height:1.6;margin-top:3px}
 .proj-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
-.proj-tag{font-size:0.58rem;background:#162032;color:#c9a84c;border-radius:3px;padding:2px 6px;font-weight:600;letter-spacing:0.04em}
+.proj-tag{font-size:0.57rem;background:#162032;color:#c9a84c;border-radius:3px;padding:2px 6px;font-weight:600;letter-spacing:0.04em}
 
-.ph{color:#c8b89a;font-style:italic;font-size:0.75rem}
+.ph{color:#c8b89a;font-style:italic;font-size:0.74rem}
 
-/* ─── PRINT (Ctrl+P fallback) ─── */
+/* ════════════════════════════════
+   MOBILE  ≤ 700px
+════════════════════════════════ */
+@media(max-width:700px){
+  body{overflow:hidden}
+
+  .mob-tabs{display:flex}
+
+  .app-body{position:relative}
+
+  /* Both panels fill the full app-body */
+  .form-panel,
+  .preview-area{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:none;
+  }
+
+  /* Hidden by default — JS toggles .panel-active */
+  .form-panel{display:none}
+  .preview-area{display:none}
+  .form-panel.panel-active{display:flex}
+  .preview-area.panel-active{display:flex}
+
+  /* Bigger inputs for thumbs */
+  input[type=text],input[type=email],textarea,select{
+    font-size:16px; /* prevents iOS zoom */
+    padding:10px 11px;
+  }
+
+  .form-footer{padding:10px 12px}
+  .dl-btn{font-size:0.82rem;padding:11px 6px}
+
+  .preview-area{padding:14px 8px 20px}
+}
+
+/* ── PRINT ── */
 @media print{
   html,body{height:auto;overflow:visible}
   body{display:block;background:white}
-  .form-panel{display:none}
-  .preview-area{display:block;padding:0;background:white;overflow:visible}
-  .cv-scale-wrap{transform:none!important;margin:0}
+  .mob-tabs,.form-panel{display:none!important}
+  .app-body{display:block;overflow:visible;height:auto}
+  .preview-area{
+    display:block!important;
+    padding:0;background:white;overflow:visible;
+    position:static!important;
+  }
+  .cv-scale-wrap{transform:none!important;height:auto!important;width:auto!important}
   #cv{box-shadow:none;width:100%}
   @page{margin:0;size:A4}
 }
@@ -292,191 +377,213 @@ select{cursor:pointer;appearance:none;
 </head>
 <body>
 
-<!-- ══════════ FORM ══════════ -->
-<div class="form-panel">
-  <div class="form-header">
-    <h2>✦ CV Builder</h2>
-    <p>Fill details — preview updates live</p>
-  </div>
-
-  <div class="form-scroll">
-
-    <div class="fsec-head">Photo</div>
-    <div class="photo-drop" onclick="document.getElementById('photoIn').click()">
-      <img id="photoThumb" src="" alt=""/>
-      <p>Click to upload your photo</p>
-      <b>JPG or PNG</b>
-    </div>
-    <input type="file" id="photoIn" accept="image/*" style="display:none"/>
-
-    <div class="fsec-head">Personal Info</div>
-    <label>Full Name</label>
-    <input type="text" id="iName" placeholder="e.g. Aryan Mehta" oninput="render()"/>
-    <label>Title / Field of Study</label>
-    <input type="text" id="iTitle" placeholder="e.g. BCA Student · Computer Applications" oninput="render()"/>
-    <label>About Me</label>
-    <textarea id="iAbout" placeholder="Passionate student with a love for building things..." oninput="render()"></textarea>
-
-    <div class="fsec-head">Contact</div>
-    <label>Phone</label>
-    <input type="text" id="iPhone" placeholder="+91 98765 43210" oninput="render()"/>
-    <label>Email</label>
-    <input type="email" id="iEmail" placeholder="you@email.com" oninput="render()"/>
-    <label>LinkedIn</label>
-    <input type="text" id="iLinkedin" placeholder="linkedin.com/in/yourname" oninput="render()"/>
-    <label>GitHub</label>
-    <input type="text" id="iGithub" placeholder="github.com/yourusername" oninput="render()"/>
-    <label>Address</label>
-    <textarea id="iAddr" placeholder="Street, Area&#10;City – 000000, State" style="min-height:48px" oninput="render()"></textarea>
-
-    <div class="fsec-head">Education</div>
-    <div id="eduList">
-      <div class="rep-row">
-        <div class="g2">
-          <div><label>Degree / Class</label><input type="text" placeholder="BCA" oninput="render()"/></div>
-          <div><label>Score</label><input type="text" placeholder="CGPA 8.5" oninput="render()"/></div>
-        </div>
-        <label>College / School</label><input type="text" placeholder="College Name" oninput="render()"/>
-        <label>Year</label><input type="text" placeholder="2022 – 2025" oninput="render()"/>
-      </div>
-    </div>
-    <button class="add-btn" onclick="addEdu()">+ Add Education Row</button>
-
-    <div class="fsec-head">Programming Skills</div>
-    <div id="skillList">
-      <div class="rep-row">
-        <div class="skill-g">
-          <div><label>Language / Skill</label><input type="text" placeholder="Python" oninput="render()"/></div>
-          <div><label>Level</label>
-            <select onchange="render()">
-              <option value="95">Expert</option>
-              <option value="78" selected>Advanced</option>
-              <option value="58">Intermediate</option>
-              <option value="35">Beginner</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="add-btn" onclick="addSkill()">+ Add Skill</button>
-
-    <div class="fsec-head">Tools & Software</div>
-    <label>Comma separated</label>
-    <input type="text" id="iTools" placeholder="VS Code, Git, MySQL, Figma, Linux" oninput="render()"/>
-
-    <div class="fsec-head">Languages Known</div>
-    <div id="langList">
-      <div class="rep-row">
-        <div class="lang-g">
-          <div><label>Language</label><input type="text" placeholder="Hindi" oninput="render()"/></div>
-          <div><label>Fluency</label>
-            <select onchange="render()">
-              <option value="5">Native</option>
-              <option value="4" selected>Fluent</option>
-              <option value="3">Good</option>
-              <option value="2">Basic</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="add-btn" onclick="addLang()">+ Add Language</button>
-
-    <div class="fsec-head">Interests</div>
-    <label>Comma separated</label>
-    <input type="text" id="iInterests" placeholder="Cybersecurity, Gaming, Design, Open Source" oninput="render()"/>
-
-  </div><!-- /form-scroll -->
-
-  <div class="form-footer">
-    <button class="dl-btn secondary" onclick="window.print()">🖨 Print</button>
-    <button class="dl-btn" onclick="downloadPDF()">⬇ Download PDF</button>
-  </div>
+<!-- MOBILE TABS -->
+<div class="mob-tabs">
+  <button class="mob-tab active" id="tabForm"  onclick="switchTab('form')">✏️ Fill Details</button>
+  <button class="mob-tab"        id="tabPrev"  onclick="switchTab('preview')">👁 Preview CV</button>
 </div>
 
-<!-- ══════════ PREVIEW ══════════ -->
-<div class="preview-area" id="previewArea">
-  <div class="cv-scale-wrap" id="cvWrap">
-    <div id="cv">
+<!-- MAIN -->
+<div class="app-body">
 
-      <div class="cv-top">
-        <div class="cv-top-left">
-          <div class="cv-photo-ring" id="cvPhotoWrap">
-            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  <!-- ══ FORM PANEL ══ -->
+  <div class="form-panel panel-active" id="formPanel">
+    <div class="form-header">
+      <h2>✦ CV Builder</h2>
+      <p>Fill in details — preview updates live</p>
+    </div>
+
+    <div class="form-scroll">
+
+      <div class="fsec-head">Photo</div>
+      <div class="photo-drop" onclick="document.getElementById('photoIn').click()">
+        <img id="photoThumb" src="" alt=""/>
+        <p>Tap to upload your photo</p>
+        <b>JPG or PNG</b>
+      </div>
+      <input type="file" id="photoIn" accept="image/*" style="display:none"/>
+
+      <div class="fsec-head">Personal Info</div>
+      <label>Full Name</label>
+      <input type="text" id="iName" placeholder="e.g. Aryan Mehta" oninput="render()"/>
+      <label>Title / Field of Study</label>
+      <input type="text" id="iTitle" placeholder="e.g. BCA Student · Computer Applications" oninput="render()"/>
+      <label>About Me</label>
+      <textarea id="iAbout" placeholder="Passionate student with a love for building things..." oninput="render()"></textarea>
+
+      <div class="fsec-head">Contact</div>
+      <label>Phone</label>
+      <input type="text" id="iPhone" placeholder="+91 98765 43210" oninput="render()"/>
+      <label>Email</label>
+      <input type="email" id="iEmail" placeholder="you@email.com" oninput="render()"/>
+      <label>LinkedIn</label>
+      <input type="text" id="iLinkedin" placeholder="linkedin.com/in/yourname" oninput="render()"/>
+      <label>GitHub</label>
+      <input type="text" id="iGithub" placeholder="github.com/yourusername" oninput="render()"/>
+      <label>Address</label>
+      <textarea id="iAddr" placeholder="Street, Area&#10;City – 000000, State" style="min-height:48px" oninput="render()"></textarea>
+
+      <div class="fsec-head">Education</div>
+      <div id="eduList">
+        <div class="rep-row">
+          <div class="g2">
+            <div><label>Degree / Class</label><input type="text" placeholder="BCA" oninput="render()"/></div>
+            <div><label>Score</label><input type="text" placeholder="CGPA 8.5" oninput="render()"/></div>
           </div>
-          <div class="cv-name" id="cvName"><span class="ph">Your Name</span></div>
-          <div class="cv-field" id="cvField"><span style="color:#4a6080;font-style:italic;font-size:0.65rem">Title / Field</span></div>
-        </div>
-        <div class="cv-top-right">
-          <div class="cv-about-top" id="cvAbout"><span class="ph">Your about me will appear here as an elegant intro...</span></div>
-          <div class="cv-contacts-grid" id="cvContacts"></div>
+          <label>College / School</label><input type="text" placeholder="College Name" oninput="render()"/>
+          <label>Year</label><input type="text" placeholder="2022 – 2025" oninput="render()"/>
         </div>
       </div>
+      <button class="add-btn" onclick="addEdu()">+ Add Education Row</button>
 
-      <div class="cv-gold-bar"></div>
-
-      <div class="cv-body">
-        <div class="cv-sidebar">
-          <div class="sb-sec">
-            <div class="cv-sec-title">Address</div>
-            <div class="sb-addr" id="cvAddr"><span class="ph">Your address</span></div>
-          </div>
-          <div class="sb-sec">
-            <div class="cv-sec-title">Programming Skills</div>
-            <div id="cvSkills"><span class="ph">Skills...</span></div>
-          </div>
-          <div class="sb-sec">
-            <div class="cv-sec-title">Tools</div>
-            <div class="sb-tags" id="cvTools"><span class="ph">Tools...</span></div>
-          </div>
-          <div class="sb-sec">
-            <div class="cv-sec-title">Languages</div>
-            <div id="cvLangs"><span class="ph">Languages...</span></div>
-          </div>
-          <div class="sb-sec">
-            <div class="cv-sec-title">Interests</div>
-            <div class="sb-tags" id="cvInterests"><span class="ph">Interests...</span></div>
-          </div>
-        </div>
-
-        <div class="cv-main">
-          <div class="main-sec">
-            <div class="main-sec-title">Education</div>
-            <div id="cvEdu"><span class="ph">Your education will appear here...</span></div>
-          </div>
-          <div class="main-sec">
-            <div class="main-sec-title">Projects</div>
-            <div id="cvProjects">
-              <div class="proj-entry">
-                <div class="proj-name">Personal Portfolio Website</div>
-                <div class="proj-desc">Designed and built a fully responsive portfolio with dark mode and contact form.</div>
-                <div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span></div>
-              </div>
-              <div class="proj-entry">
-                <div class="proj-name">Student Result Management System</div>
-                <div class="proj-desc">Desktop app for managing student results with login authentication — college mini-project.</div>
-                <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Tkinter</span><span class="proj-tag">MySQL</span></div>
-              </div>
+      <div class="fsec-head">Programming Skills</div>
+      <div id="skillList">
+        <div class="rep-row">
+          <div class="skill-g">
+            <div><label>Language / Skill</label><input type="text" placeholder="Python" oninput="render()"/></div>
+            <div><label>Level</label>
+              <select onchange="render()">
+                <option value="95">Expert</option>
+                <option value="78" selected>Advanced</option>
+                <option value="58">Intermediate</option>
+                <option value="35">Beginner</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
+      <button class="add-btn" onclick="addSkill()">+ Add Skill</button>
 
-    </div><!-- /#cv -->
-  </div><!-- /.cv-scale-wrap -->
-</div>
+      <div class="fsec-head">Tools & Software</div>
+      <label>Comma separated</label>
+      <input type="text" id="iTools" placeholder="VS Code, Git, MySQL, Figma, Linux" oninput="render()"/>
+
+      <div class="fsec-head">Languages Known</div>
+      <div id="langList">
+        <div class="rep-row">
+          <div class="lang-g">
+            <div><label>Language</label><input type="text" placeholder="Hindi" oninput="render()"/></div>
+            <div><label>Fluency</label>
+              <select onchange="render()">
+                <option value="5">Native</option>
+                <option value="4" selected>Fluent</option>
+                <option value="3">Good</option>
+                <option value="2">Basic</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addLang()">+ Add Language</button>
+
+      <div class="fsec-head">Interests</div>
+      <label>Comma separated</label>
+      <input type="text" id="iInterests" placeholder="Cybersecurity, Gaming, Design, Open Source" oninput="render()"/>
+
+    </div><!-- /form-scroll -->
+
+    <div class="form-footer">
+      <button class="dl-btn secondary" onclick="window.print()">🖨 Print</button>
+      <button class="dl-btn" id="dlBtn" onclick="downloadPDF()">⬇ Download PDF</button>
+    </div>
+  </div>
+
+  <!-- ══ PREVIEW ══ -->
+  <div class="preview-area" id="previewPanel">
+    <div class="cv-scale-wrap" id="cvWrap">
+      <div id="cv">
+
+        <div class="cv-top">
+          <div class="cv-top-left">
+            <div class="cv-photo-ring" id="cvPhotoWrap">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="cv-name" id="cvName"><span class="ph">Your Name</span></div>
+            <div class="cv-field" id="cvField"><span style="color:#4a6080;font-style:italic;font-size:0.62rem">Title / Field</span></div>
+          </div>
+          <div class="cv-top-right">
+            <div class="cv-about-top" id="cvAbout"><span class="ph">Your about me will appear here as an elegant intro...</span></div>
+            <div class="cv-contacts-grid" id="cvContacts"></div>
+          </div>
+        </div>
+
+        <div class="cv-gold-bar"></div>
+
+        <div class="cv-body">
+          <div class="cv-sidebar">
+            <div class="sb-sec">
+              <div class="cv-sec-title">Address</div>
+              <div class="sb-addr" id="cvAddr"><span class="ph">Your address</span></div>
+            </div>
+            <div class="sb-sec">
+              <div class="cv-sec-title">Programming Skills</div>
+              <div id="cvSkills"><span class="ph">Skills...</span></div>
+            </div>
+            <div class="sb-sec">
+              <div class="cv-sec-title">Tools</div>
+              <div class="sb-tags" id="cvTools"><span class="ph">Tools...</span></div>
+            </div>
+            <div class="sb-sec">
+              <div class="cv-sec-title">Languages</div>
+              <div id="cvLangs"><span class="ph">Languages...</span></div>
+            </div>
+            <div class="sb-sec">
+              <div class="cv-sec-title">Interests</div>
+              <div class="sb-tags" id="cvInterests"><span class="ph">Interests...</span></div>
+            </div>
+          </div>
+
+          <div class="cv-main">
+            <div class="main-sec">
+              <div class="main-sec-title">Education</div>
+              <div id="cvEdu"><span class="ph">Your education will appear here...</span></div>
+            </div>
+            <div class="main-sec">
+              <div class="main-sec-title">Projects</div>
+              <div id="cvProjects">
+                <div class="proj-entry">
+                  <div class="proj-name">Personal Portfolio Website</div>
+                  <div class="proj-desc">Designed and built a fully responsive portfolio with dark mode and contact form.</div>
+                  <div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span></div>
+                </div>
+                <div class="proj-entry">
+                  <div class="proj-name">Student Result Management System</div>
+                  <div class="proj-desc">Desktop app for managing student results with login — college mini-project.</div>
+                  <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Tkinter</span><span class="proj-tag">MySQL</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /#cv -->
+    </div>
+  </div>
+
+</div><!-- /.app-body -->
 
 <script>
-/* ── SCALE CV TO FIT PREVIEW ── */
+/* ── TAB SWITCHER (mobile) ── */
+function switchTab(tab){
+  const isForm = tab === 'form';
+  document.getElementById('formPanel').classList.toggle('panel-active', isForm);
+  document.getElementById('previewPanel').classList.toggle('panel-active', !isForm);
+  document.getElementById('tabForm').classList.toggle('active', isForm);
+  document.getElementById('tabPrev').classList.toggle('active', !isForm);
+  if(!isForm) setTimeout(scaleCv, 80);
+}
+
+/* ── SCALE CV ── */
 function scaleCv(){
   const wrap = document.getElementById('cvWrap');
-  const area = document.getElementById('previewArea');
+  const area = document.getElementById('previewPanel');
+  if(!area || !wrap) return;
   const cvW = 794;
-  const availW = area.clientWidth - 32; // 16px padding each side
+  const pad = window.innerWidth <= 700 ? 16 : 24;
+  const availW = area.clientWidth - pad;
   const scale = Math.min(1, availW / cvW);
   wrap.style.transform = `scale(${scale})`;
   wrap.style.transformOrigin = 'top center';
-  // Correct the height so the container doesn't leave a gap
   const cvH = document.getElementById('cv').offsetHeight;
   wrap.style.height = (cvH * scale) + 'px';
   wrap.style.width = cvW + 'px';
@@ -490,7 +597,7 @@ document.getElementById('photoIn').addEventListener('change',function(e){
   r.onload=function(ev){
     document.getElementById('photoThumb').src=ev.target.result;
     document.getElementById('photoThumb').style.display='block';
-    document.querySelector('.photo-drop p').textContent='Click to change photo';
+    document.querySelector('.photo-drop p').textContent='Tap to change photo';
     document.getElementById('cvPhotoWrap').innerHTML=`<img src="${ev.target.result}" alt="photo"/>`;
   };
   r.readAsDataURL(f);
@@ -537,40 +644,39 @@ function addLang(){
 const v=id=>(document.getElementById(id)?.value||'').trim();
 const set=(id,h)=>{document.getElementById(id).innerHTML=h};
 const lvlLabel={95:'Expert',78:'Advanced',58:'Intermediate',35:'Beginner'};
-
 const ICONS={
   phone:`<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.5 1.18 2 2 0 012.41 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.5 7.11A16 16 0 0013.88 14l.82-.82a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>`,
   email:`<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>`,
   linkedin:`<path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>`,
   github:`<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>`,
 };
-const ci=(key,text,href)=>`<a class="cv-contact-item" href="${href}" target="_blank"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#c9a84c;stroke-width:2;fill:none;flex-shrink:0;stroke-linecap:round;stroke-linejoin:round">${ICONS[key]}</svg><span>${text}</span></a>`;
+const ci=(key,text,href)=>`<a class="cv-contact-item" href="${href}" target="_blank"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#c9a84c;stroke-width:2;fill:none;flex-shrink:0;stroke-linecap:round;stroke-linejoin:round">${ICONS[key]}</svg><span>${text}</span></a>`;
 
 /* ── RENDER ── */
 function render(){
   set('cvName', v('iName')||'<span class="ph">Your Name</span>');
-  set('cvField', v('iTitle')||'<span style="color:#4a6080;font-style:italic;font-size:0.65rem">Title / Field</span>');
+  set('cvField', v('iTitle')||'<span style="color:#4a6080;font-style:italic;font-size:0.62rem">Title / Field</span>');
 
   const ab=v('iAbout');
-  set('cvAbout', ab ? ab.replace(/\n/g,'<br/>') : '<span class="ph">Your about me will appear here as an elegant intro...</span>');
+  set('cvAbout', ab?ab.replace(/\n/g,'<br/>'):'<span class="ph">Your about me will appear here as an elegant intro...</span>');
 
   let ct='';
   if(v('iPhone'))    ct+=ci('phone',   v('iPhone'),   '#');
   if(v('iEmail'))    ct+=ci('email',   v('iEmail'),   'mailto:'+v('iEmail'));
   if(v('iLinkedin')) ct+=ci('linkedin',v('iLinkedin'),'https://'+v('iLinkedin').replace(/^https?:\/\//,''));
   if(v('iGithub'))   ct+=ci('github',  v('iGithub'),  'https://'+v('iGithub').replace(/^https?:\/\//,''));
-  set('cvContacts', ct||'<span class="ph" style="font-size:0.68rem">Phone · Email · LinkedIn · GitHub</span>');
+  set('cvContacts', ct||'<span class="ph" style="font-size:0.67rem">Phone · Email · LinkedIn · GitHub</span>');
 
   const ad=v('iAddr');
-  set('cvAddr', ad ? ad.replace(/\n/g,'<br/>') : '<span class="ph">Your address</span>');
+  set('cvAddr', ad?ad.replace(/\n/g,'<br/>'):'<span class="ph">Your address</span>');
 
   let eduH='';
   document.querySelectorAll('#eduList .rep-row').forEach(r=>{
     const inp=r.querySelectorAll('input');
-    const deg=inp[0]?.value.trim(), score=inp[1]?.value.trim(),
-          sch=inp[2]?.value.trim(), yr=inp[3]?.value.trim();
+    const deg=inp[0]?.value.trim(),score=inp[1]?.value.trim(),
+          sch=inp[2]?.value.trim(),yr=inp[3]?.value.trim();
     if(deg||sch) eduH+=`<div class="edu-entry-cv">
-      <div class="edu-deg">${deg||'—'}${score?` <span style="font-weight:400;font-size:0.67rem;color:#9a8f80">· ${score}</span>`:''}</div>
+      <div class="edu-deg">${deg||'—'}${score?` <span style="font-weight:400;font-size:0.66rem;color:#9a8f80">· ${score}</span>`:''}</div>
       ${sch?`<div class="edu-school">${sch}</div>`:''}
       ${yr?`<div class="edu-meta">${yr}</div>`:''}
     </div>`;
@@ -589,52 +695,47 @@ function render(){
   set('cvSkills', skH||'<span class="ph">Skills...</span>');
 
   const tl=v('iTools');
-  set('cvTools', tl ? tl.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join('') : '<span class="ph">Tools...</span>');
+  set('cvTools', tl?tl.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join(''):'<span class="ph">Tools...</span>');
 
   let lgH='';
   document.querySelectorAll('#langList .rep-row').forEach(r=>{
     const name=r.querySelector('input')?.value.trim();
     const lvl=parseInt(r.querySelector('select')?.value||'3');
     if(name){
-      let dots=''; for(let i=1;i<=5;i++) dots+=`<div class="sb-dot${i<=lvl?' on':''}"></div>`;
+      let dots='';for(let i=1;i<=5;i++) dots+=`<div class="sb-dot${i<=lvl?' on':''}"></div>`;
       lgH+=`<div class="sb-lang"><span>${name}</span><div class="sb-dots">${dots}</div></div>`;
     }
   });
   set('cvLangs', lgH||'<span class="ph">Languages...</span>');
 
   const it=v('iInterests');
-  set('cvInterests', it ? it.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join('') : '<span class="ph">Interests...</span>');
+  set('cvInterests', it?it.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join(''):'<span class="ph">Interests...</span>');
 
-  setTimeout(scaleCv, 50);
+  setTimeout(scaleCv, 40);
 }
 
-/* ── PDF DOWNLOAD (works on GitHub Pages) ── */
+/* ── PDF DOWNLOAD ── */
 function downloadPDF(){
-  const btn = document.querySelector('.dl-btn:not(.secondary)');
-  btn.textContent = '⏳ Generating...';
-  btn.disabled = true;
+  const btn=document.getElementById('dlBtn');
+  btn.textContent='⏳ Generating...';
+  btn.disabled=true;
 
-  // Temporarily remove scale transform for clean capture
-  const wrap = document.getElementById('cvWrap');
-  const prevTransform = wrap.style.transform;
-  const prevHeight = wrap.style.height;
-  wrap.style.transform = 'none';
-  wrap.style.height = 'auto';
-
-  const el = document.getElementById('cv');
-  const name = v('iName') || 'CV';
+  const wrap=document.getElementById('cvWrap');
+  const prev={t:wrap.style.transform,h:wrap.style.height};
+  wrap.style.transform='none';
+  wrap.style.height='auto';
 
   html2pdf().set({
-    margin: 0,
-    filename: name.replace(/\s+/g,'_') + '_CV.pdf',
-    image: { type:'jpeg', quality:0.98 },
-    html2canvas: { scale:2, useCORS:true, backgroundColor:'#ffffff' },
-    jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
-  }).from(el).save().then(()=>{
-    wrap.style.transform = prevTransform;
-    wrap.style.height = prevHeight;
-    btn.textContent = '⬇ Download PDF';
-    btn.disabled = false;
+    margin:0,
+    filename:(v('iName')||'CV').replace(/\s+/g,'_')+'_CV.pdf',
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+  }).from(document.getElementById('cv')).save().then(()=>{
+    wrap.style.transform=prev.t;
+    wrap.style.height=prev.h;
+    btn.textContent='⬇ Download PDF';
+    btn.disabled=false;
   });
 }
 
