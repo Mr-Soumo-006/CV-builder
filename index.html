@@ -480,7 +480,12 @@ select{
       <label>Comma separated</label>
       <input type="text" id="iInterests" placeholder="Cybersecurity, Gaming, Design, Open Source" oninput="render()"/>
 
-      <div class="fsec-head">Projects</div>
+      <div class="fsec-head" style="position:relative;">
+        Projects
+        <label style="position:absolute;right:0;top:50%;transform:translateY(-50%);margin:0;display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6rem;text-transform:none;color:#7d8590;letter-spacing:0;font-weight:500;">
+          <input type="checkbox" id="toggleProjects" checked onchange="render()" style="width:auto;margin:0;"> Show
+        </label>
+      </div>
       <div id="projList">
         <div class="rep-row">
           <button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
@@ -549,7 +554,7 @@ select{
               <div class="main-sec-title">Education</div>
               <div id="cvEdu"><span class="ph">Your education will appear here...</span></div>
             </div>
-            <div class="main-sec">
+            <div class="main-sec" id="secProjects">
               <div class="main-sec-title">Projects</div>
               <div id="cvProjects"><span class="ph">Your projects will appear here...</span></div>
             </div>
@@ -732,7 +737,15 @@ function render(){
       ${tags?`<div class="proj-tags">${tags.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>`:''}
     </div>`;
   });
-  set('cvProjects', prH||'<span class="ph">Your projects will appear here...</span>');
+  
+  const showProj = document.getElementById('toggleProjects').checked;
+  const secProj = document.getElementById('secProjects');
+  if(showProj) {
+    secProj.style.display = 'block';
+    set('cvProjects', prH||'<span class="ph">Your projects will appear here...</span>');
+  } else {
+    secProj.style.display = 'none';
+  }
 
   setTimeout(scaleCv, 40);
 }
