@@ -480,6 +480,17 @@ select{
       <label>Comma separated</label>
       <input type="text" id="iInterests" placeholder="Cybersecurity, Gaming, Design, Open Source" oninput="render()"/>
 
+      <div class="fsec-head">Projects</div>
+      <div id="projList">
+        <div class="rep-row">
+          <button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+          <label>Project Name</label><input type="text" placeholder="Personal Portfolio Website" oninput="render()"/>
+          <label>Description</label><textarea placeholder="Designed and built a fully responsive portfolio..." oninput="render()"></textarea>
+          <label>Tech Tags (comma separated)</label><input type="text" placeholder="HTML, CSS, JavaScript" oninput="render()"/>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addProj()">+ Add Project</button>
+
     </div><!-- /form-scroll -->
 
     <div class="form-footer">
@@ -540,18 +551,7 @@ select{
             </div>
             <div class="main-sec">
               <div class="main-sec-title">Projects</div>
-              <div id="cvProjects">
-                <div class="proj-entry">
-                  <div class="proj-name">Personal Portfolio Website</div>
-                  <div class="proj-desc">Designed and built a fully responsive portfolio with dark mode and contact form.</div>
-                  <div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span></div>
-                </div>
-                <div class="proj-entry">
-                  <div class="proj-name">Student Result Management System</div>
-                  <div class="proj-desc">Desktop app for managing student results with login — college mini-project.</div>
-                  <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Tkinter</span><span class="proj-tag">MySQL</span></div>
-                </div>
-              </div>
+              <div id="cvProjects"><span class="ph">Your projects will appear here...</span></div>
             </div>
           </div>
         </div>
@@ -639,6 +639,14 @@ function addLang(){
     </div>`;
   document.getElementById('langList').appendChild(d);
 }
+function addProj(){
+  const d=document.createElement('div'); d.className='rep-row';
+  d.innerHTML=`<button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+    <label>Project Name</label><input type="text" placeholder="My Project" oninput="render()"/>
+    <label>Description</label><textarea placeholder="What you built and how..." oninput="render()"></textarea>
+    <label>Tech Tags (comma separated)</label><input type="text" placeholder="Python, Flask, MySQL" oninput="render()"/>`;
+  document.getElementById('projList').appendChild(d);
+}
 
 /* ── HELPERS ── */
 const v=id=>(document.getElementById(id)?.value||'').trim();
@@ -711,6 +719,21 @@ function render(){
   const it=v('iInterests');
   set('cvInterests', it?it.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="sb-tag">${t}</span>`).join(''):'<span class="ph">Interests...</span>');
 
+  let prH='';
+  document.querySelectorAll('#projList .rep-row').forEach(r=>{
+    const inp=r.querySelectorAll('input');
+    const ta=r.querySelector('textarea');
+    const name=inp[0]?.value.trim();
+    const desc=ta?.value.trim();
+    const tags=inp[1]?.value.trim();
+    if(name||desc) prH+=`<div class="proj-entry">
+      <div class="proj-name">${name||'Untitled Project'}</div>
+      ${desc?`<div class="proj-desc">${desc}</div>`:''}
+      ${tags?`<div class="proj-tags">${tags.split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>`:''}
+    </div>`;
+  });
+  set('cvProjects', prH||'<span class="ph">Your projects will appear here...</span>');
+
   setTimeout(scaleCv, 40);
 }
 
@@ -740,7 +763,7 @@ function downloadPDF(){
 }
 
 render();
-scaleCv();
+window.addEventListener('load', scaleCv);
 </script>
 </body>
 </html>
