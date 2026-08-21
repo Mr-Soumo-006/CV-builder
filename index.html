@@ -756,6 +756,14 @@ function downloadPDF(){
   btn.textContent='⏳ Generating...';
   btn.disabled=true;
 
+  const prevArea = document.getElementById('previewPanel');
+  const wasHidden = window.getComputedStyle(prevArea).display === 'none';
+  if(wasHidden) {
+    prevArea.style.display = 'flex';
+    prevArea.style.position = 'absolute';
+    prevArea.style.left = '-9999px';
+  }
+
   const wrap=document.getElementById('cvWrap');
   const prev={t:wrap.style.transform,h:wrap.style.height};
   wrap.style.transform='none';
@@ -770,8 +778,24 @@ function downloadPDF(){
   }).from(document.getElementById('cv')).save().then(()=>{
     wrap.style.transform=prev.t;
     wrap.style.height=prev.h;
+    if(wasHidden) {
+      prevArea.style.display = '';
+      prevArea.style.position = '';
+      prevArea.style.left = '';
+    }
     btn.textContent='⬇ Download PDF';
     btn.disabled=false;
+  }).catch(err => {
+    wrap.style.transform=prev.t;
+    wrap.style.height=prev.h;
+    if(wasHidden) {
+      prevArea.style.display = '';
+      prevArea.style.position = '';
+      prevArea.style.left = '';
+    }
+    btn.textContent='⬇ Download PDF';
+    btn.disabled=false;
+    alert("PDF Generation Error: " + err);
   });
 }
 
