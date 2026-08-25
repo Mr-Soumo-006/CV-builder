@@ -423,6 +423,25 @@ select{
       <label>Address</label>
       <textarea id="iAddr" placeholder="Street, Area&#10;City – 000000, State" style="min-height:48px" oninput="render()"></textarea>
 
+      <div class="fsec-head">
+        Experience
+        <label style="margin:0 0 0 auto; display:flex; align-items:center; gap:6px; cursor:pointer; font-size:14px; text-transform:none; color:#7d8590; letter-spacing:0; font-weight:500; padding:6px; -webkit-tap-highlight-color:transparent;">
+          <input type="checkbox" id="toggleExp" checked onchange="render()" onclick="render()" style="width:18px; height:18px; margin:0; cursor:pointer; -webkit-appearance:checkbox; appearance:checkbox;"> Show
+        </label>
+      </div>
+      <div id="expList">
+        <div class="rep-row">
+          <button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+          <div class="g2">
+            <div><label>Job Title</label><input type="text" placeholder="Software Engineer" oninput="render()"/></div>
+            <div><label>Company</label><input type="text" placeholder="Google" oninput="render()"/></div>
+          </div>
+          <label>Duration</label><input type="text" placeholder="Jan 2021 – Present" oninput="render()"/>
+          <label>Description</label><textarea placeholder="Describe your responsibilities and achievements..." oninput="render()"></textarea>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addExp()" style="margin-bottom:8px;">+ Add Experience</button>
+
       <div class="fsec-head">Education</div>
       <div id="eduList">
         <div class="rep-row">
@@ -553,6 +572,10 @@ select{
           </div>
 
           <div class="cv-main">
+            <div class="main-sec" id="secExp">
+              <div class="main-sec-title">Experience</div>
+              <div id="cvExp"><span class="ph">Your work experience will appear here...</span></div>
+            </div>
             <div class="main-sec">
               <div class="main-sec-title">Education</div>
               <div id="cvEdu"><span class="ph">Your education will appear here...</span></div>
@@ -612,6 +635,17 @@ document.getElementById('photoIn').addEventListener('change',function(e){
 });
 
 /* ── ADD ROWS ── */
+function addExp(){
+  const d=document.createElement('div'); d.className='rep-row';
+  d.innerHTML=`<button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
+    <div class="g2">
+      <div><label>Job Title</label><input type="text" placeholder="Software Engineer" oninput="render()"/></div>
+      <div><label>Company</label><input type="text" placeholder="Company Name" oninput="render()"/></div>
+    </div>
+    <label>Duration</label><input type="text" placeholder="Month Year – Month Year" oninput="render()"/>
+    <label>Description</label><textarea placeholder="Describe your responsibilities..." oninput="render()"></textarea>`;
+  document.getElementById('expList').appendChild(d);
+}
 function addEdu(){
   const d=document.createElement('div'); d.className='rep-row';
   d.innerHTML=`<button class="remove-btn" onclick="this.closest('.rep-row').remove();render()">✕</button>
@@ -685,6 +719,28 @@ function render(){
 
   const ad=v('iAddr');
   set('cvAddr', ad?ad.replace(/\n/g,'<br/>'):'<span class="ph">Your address</span>');
+
+  let expH='';
+  document.querySelectorAll('#expList .rep-row').forEach(r=>{
+    const inp=r.querySelectorAll('input');
+    const ta=r.querySelector('textarea');
+    const title=inp[0]?.value.trim(), comp=inp[1]?.value.trim(), dur=inp[2]?.value.trim();
+    const desc=ta?.value.trim();
+    if(title||comp||desc) expH+=`<div class="edu-entry-cv">
+      <div class="edu-deg">${title||'Untitled Role'}</div>
+      ${comp?`<div class="edu-school">${comp}</div>`:''}
+      ${dur?`<div class="edu-meta">${dur}</div>`:''}
+      ${desc?`<div class="proj-desc" style="margin-top:4px;">${desc.replace(/\n/g,'<br/>')}</div>`:''}
+    </div>`;
+  });
+  const showExp = document.getElementById('toggleExp').checked;
+  const secExp = document.getElementById('secExp');
+  if(showExp) {
+    secExp.style.display = 'block';
+    set('cvExp', expH||'<span class="ph">Your work experience will appear here...</span>');
+  } else {
+    secExp.style.display = 'none';
+  }
 
   let eduH='';
   document.querySelectorAll('#eduList .rep-row').forEach(r=>{
